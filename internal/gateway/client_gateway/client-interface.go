@@ -1,4 +1,4 @@
-package gateway
+package clientGateway
 
 import "github.com/tecwagner/walletcore-service/internal/entity"
 

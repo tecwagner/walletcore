@@ -9,11 +9,11 @@ import (
 )
 
 type Transaction struct {
-	ID          string    `json:"id"`
-	AccountFrom *Account  `json:"accountFrom"`
-	AccountTo   *Account  `json:"accountTo"`
-	Amount      float64   `json:"amount"`
-	CreatedAt   time.Time `json:"createdAt"`
+	ID          string                 `json:"id"`
+	AccountFrom *Account `json:"accountFrom"`
+	AccountTo   *Account `json:"accountTo"`
+	Amount      float64                `json:"amount"`
+	CreatedAt   time.Time              `json:"createdAt"`
 }
 
 func NewTransaction(accountFrom, accountTo *Account, amount float64) (*Transaction, error) {

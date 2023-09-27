@@ -2,10 +2,10 @@ package createClient
 
 import (
 	"github.com/tecwagner/walletcore-service/internal/entity"
-	"github.com/tecwagner/walletcore-service/internal/gateway"
+	clientGateway "github.com/tecwagner/walletcore-service/internal/gateway/client_gateway"
 )
 
-func NewCreateClientUseCase(clientGateway gateway.IClientGateway) *CreateClientUseCase {
+func NewCreateClientUseCase(clientGateway clientGateway.IClientGateway) *CreateClientUseCase {
 	return &CreateClientUseCase{
 		ClientGateway: clientGateway,
 	}

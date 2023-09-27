@@ -37,7 +37,7 @@ func (a *Account) Credit(amount float64) {
 	fmt.Println(a.Client.ID)
 	fmt.Println(a.Balance)
 
-	a.Balance += amount	
+	a.Balance += amount
 	a.UpdatedAt = time.Now()
 }
 
@@ -45,7 +45,7 @@ func (a *Account) Debit(amount float64) {
 
 	fmt.Println(a.Client.ID)
 	fmt.Println(a.Balance)
-	
+
 	a.Balance -= amount
 	a.UpdatedAt = time.Now()
 }
