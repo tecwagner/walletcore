@@ -12,7 +12,7 @@ type ClientGatewayMocks struct {
 	mock.Mock
 }
 
-// Mock Intercafe Gateway
+// Mock Interface Gateway
 func (m *ClientGatewayMocks) Save(client *entity.Client) error {
 	args := m.Called(client)
 	return args.Error(0)

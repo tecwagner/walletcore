@@ -1,7 +1,7 @@
 package createClient
 
-import "github.com/tecwagner/walletcore-service/internal/gateway"
+import clientGateway "github.com/tecwagner/walletcore-service/internal/gateway/client_gateway"
 
 type CreateClientUseCase struct {
-	ClientGateway gateway.IClientGateway
+	ClientGateway clientGateway.IClientGateway
 }

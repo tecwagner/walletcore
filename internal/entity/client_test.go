@@ -41,4 +41,3 @@ func TestAddAccountToClient(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 1, len(client.Accounts))
 }
-
