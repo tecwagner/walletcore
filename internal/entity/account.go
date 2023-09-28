@@ -9,7 +9,8 @@ import (
 
 type Account struct {
 	ID        string    `json:"id"`
-	Client    *Client   `json:"client"`
+	Client    *Client   
+	ClientID  string	`json:"client"`
 	Balance   float64   `json:"balance"`
 	CreatedAt time.Time `json:"created"`
 	UpdatedAt time.Time `json:"updated"`

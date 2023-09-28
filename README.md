@@ -54,3 +54,9 @@
                 - interface-gateway
                 - test de UseCase
                 - criando novos transaction com metodo Execute
+
+# Camada externa que comunica com nosso banco de dados.
+
+    - internal
+        - infrastructure
+            - database

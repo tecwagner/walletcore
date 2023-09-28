@@ -20,30 +20,18 @@ func TestCreateNewAccountWhilClient(t *testing.T) {
 }
 
 func TestCreditAccount(t *testing.T) {
-	account := &Account{}
+	client, _ := NewClient("Joarez", "joarez@tekpixel.com")
+	account := NewAccount(client)
 
 	account.Credit(100.0)
 	assert.Equal(t, float64(100), account.Balance)
 }
 
 func TestDebitAccount(t *testing.T) {
-	account := &Account{Balance: 100}
-
+	client, _ := NewClient("Joarez", "joarez@tekpixel.com")
+	account := NewAccount(client)
+	account.Credit(100.0)
 	account.Debit(50.0)
 	assert.Equal(t, float64(50), account.Balance)
 }
 
-// func TestAccountCreditWithInvalidAmount(t *testing.T) {
-// 	account := &Account{}
-
-// 	account.Credit(0)
-// 	assert.Equal(t, float64(0), account.Balance)
-// }
-
-// func TestAccountDebitWithInvalidAmount(t *testing.T) {
-// 	account := &Account{}
-
-// 	err := account.Debit(0)
-// 	assert.Error(t, err)
-// 	assert.Equal(t, float64(0), account.Balance)
-// }
