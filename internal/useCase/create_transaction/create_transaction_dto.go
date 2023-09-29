@@ -2,8 +2,8 @@ package createTransaction
 
 
 type CreateTransactionInputDTO struct {
-	AccountIDFrom  string
-	AccountIDTo string
+	AccountFromID  string
+	AccountToID string
 	Amount float64
 }
 

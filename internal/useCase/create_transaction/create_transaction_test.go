@@ -60,19 +60,19 @@ func TestCreateTransactionUseCase_Execute(t *testing.T) {
 	mockAccount.On("FindByID", payer.ID).Return(accountFrom, nil)
 	mockAccount.On("FindByID", payee.ID).Return(accountTo, nil)
 
-	// Criando transação 
+	// Criando transação
 	mockTransaction := &TransactionGatewayMock{}
 	mockTransaction.On("Create", mock.Anything).Return(nil)
-	
+
 	//Nova Transação com os mock
 	inputDTO := CreateTransactionInputDTO{
-		AccountIDFrom: payer.ID,
-		AccountIDTo: payee.ID,
-		Amount: 100,
+		AccountFromID: payer.ID,
+		AccountToID:   payee.ID,
+		Amount:        100,
 	}
 
 	// Criando a Transação com UseCase
-	uc := NewCreateTransactiontUseCase(mockTransaction, mockAccount )
+	uc := NewCreateTransactiontUseCase(mockTransaction, mockAccount)
 	output, err := uc.Execute(inputDTO)
 	assert.Nil(t, err)
 	assert.NotNil(t, output)
