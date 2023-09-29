@@ -1,12 +1,14 @@
 ## walletcore
 
-# Technologies
+# Tecnologias
 
     - Go Language
     - Docker
     - Docker-Compose
     - Github
     - Moks Utiliando biblioteca testify/mock"
+    - Suite de Test Utiliando biblioteca testify/suite"
+    - sqlite3 para teste de integração
 
 # Criando o projeto atarves do comando:
 
@@ -55,8 +57,11 @@
                 - test de UseCase
                 - criando novos transaction com metodo Execute
 
-# Camada externa que comunica com nosso banco de dados.
+# Camada externa de comunicação
 
     - internal
         - infrastructure
             - database
+                - account-database
+                - client-database
+                - transaction-database

@@ -6,29 +6,27 @@ import (
 	transactionGateway "github.com/tecwagner/walletcore-service/internal/gateway/transaction_gateway"
 )
 
-
-
 func NewCreateTransactiontUseCase(transactionGateway transactionGateway.ITransactionGateway, accountGateway accountGateway.IAccountGateway) *CreateTransactionUseCase {
 	return &CreateTransactionUseCase{
 		TransactionGateway: transactionGateway,
-		AccountGateway: accountGateway,
+		AccountGateway:     accountGateway,
 	}
 }
 
 func (uc *CreateTransactionUseCase) Execute(input CreateTransactionInputDTO) (*CreateTransactionOutputDTO, error) {
 	// Consultando a conta do cliente pagador
-	accountFrom, err := uc.AccountGateway.FindByID(input.AccountIDFrom)
+	accountFrom, err := uc.AccountGateway.FindByID(input.AccountFromID)
 	if err != nil {
 		return nil, err
 	}
 
 	// Consultador a conta do cliente recebedor
-	accountTo, err := uc.AccountGateway.FindByID(input.AccountIDTo)
+	accountTo, err := uc.AccountGateway.FindByID(input.AccountToID)
 	if err != nil {
 		return nil, err
 	}
 
-	// Iniciando a nova transação 
+	// Iniciando a nova transação
 	transaction, err := entity.NewTransaction(accountFrom, accountTo, input.Amount)
 	if err != nil {
 		return nil, err
