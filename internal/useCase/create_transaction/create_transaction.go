@@ -4,12 +4,20 @@ import (
 	"github.com/tecwagner/walletcore-service/internal/entity"
 	accountGateway "github.com/tecwagner/walletcore-service/internal/gateway/account_gateway"
 	transactionGateway "github.com/tecwagner/walletcore-service/internal/gateway/transaction_gateway"
+	"github.com/tecwagner/walletcore-service/pkg/events"
 )
 
-func NewCreateTransactiontUseCase(transactionGateway transactionGateway.ITransactionGateway, accountGateway accountGateway.IAccountGateway) *CreateTransactionUseCase {
+func NewCreateTransactionUseCase(
+	transactionGateway transactionGateway.ITransactionGateway,
+	accountGateway accountGateway.IAccountGateway,
+	eventDispatcher events.IEventDispatcherInterface,
+	transactionCreated events.IEventInterface,
+) *CreateTransactionUseCase {
 	return &CreateTransactionUseCase{
 		TransactionGateway: transactionGateway,
 		AccountGateway:     accountGateway,
+		EventDispatcher:    eventDispatcher,
+		TransactionCreated: transactionCreated,
 	}
 }
 
@@ -38,5 +46,11 @@ func (uc *CreateTransactionUseCase) Execute(input CreateTransactionInputDTO) (*C
 		return nil, err
 	}
 
-	return &CreateTransactionOutputDTO{ID: transaction.ID}, nil
+	output := &CreateTransactionOutputDTO{ID: transaction.ID}
+
+	// Enviado evento
+	uc.TransactionCreated.SetPayload(output)
+	uc.EventDispatcher.Dispatch(uc.TransactionCreated)
+
+	return output, nil
 }

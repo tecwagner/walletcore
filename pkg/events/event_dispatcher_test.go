@@ -1,6 +1,7 @@
 package events
 
 import (
+	"sync"
 	"testing"
 	"time"
 
@@ -12,6 +13,10 @@ import (
 type TestEvent struct {
 	Name    string
 	Payload interface{}
+}
+
+func (et *TestEvent) SetPayload(payload interface{}) {
+	et.Payload = payload
 }
 
 func (et *TestEvent) GetName() string {
@@ -30,7 +35,7 @@ type TestEventHandler struct {
 	ID int
 }
 
-func (t *TestEventHandler) Handle(event IEventInterface) {
+func (t *TestEventHandler) Handle(event IEventInterface, wg *sync.WaitGroup) {
 }
 
 type EventDispatcherTestSuite struct {
@@ -139,7 +144,7 @@ func (suite *EventDispatcherTestSuite) TestEventDipatcher_Remove() {
 	suite.eventDispatcher.Remove(suite.event.GetName(), &suite.handler)
 	suite.Equal(1, len(suite.eventDispatcher.handlers[suite.event.GetName()]))
 	assert.Equal(suite.T(), &suite.handler2, suite.eventDispatcher.handlers[suite.event.GetName()][0])
-	
+
 	// Removendo 2 segundo evento handler
 	suite.eventDispatcher.Remove(suite.event.GetName(), &suite.handler2)
 	suite.Equal(0, len(suite.eventDispatcher.handlers[suite.event.GetName()]))
@@ -153,21 +158,22 @@ type MockHandler struct {
 	mock.Mock
 }
 
-func (m *MockHandler) Handle(event IEventInterface) {
+func (m *MockHandler) Handle(event IEventInterface, wg *sync.WaitGroup) {
 	m.Called(event)
+	wg.Done()
 }
 
 func (suite *EventDispatcherTestSuite) TestEventDispatch_Dispatch() {
 	eh := &MockHandler{}
-	eh.On("Handle", &suite.event)	
-	
+	eh.On("Handle", &suite.event)
+
 	eh2 := &MockHandler{}
 	eh2.On("Handle", &suite.event)
 
 	suite.eventDispatcher.Register(suite.event.GetName(), eh)
 	suite.eventDispatcher.Register(suite.event.GetName(), eh2)
 
-	suite.eventDispatcher.Dispatch(&suite.event)	
+	suite.eventDispatcher.Dispatch(&suite.event)
 
 	eh.AssertExpectations(suite.T())
 	eh2.AssertExpectations(suite.T())

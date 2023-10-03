@@ -1,17 +1,21 @@
 package events
 
-import "time"
+import (
+	"sync"
+	"time"
+)
 
 //Evento
 type IEventInterface interface {
 	GetName() string
 	GetDateTime() time.Time
 	GetPayload() interface{} // Podemos ter varios payload criado
+	SetPayload(payload interface{})
 }
 
 // Operação que executa o evento
 type IEventHandlerInterface interface {
-	Handle(event IEventInterface)
+	Handle(event IEventInterface, wg *sync.WaitGroup)
 }
 
 // Gerenciado dos eventos Registra, Dispatcha, Remove e Limpa
