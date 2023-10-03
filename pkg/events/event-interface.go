@@ -14,8 +14,8 @@ type IEventHandlerInterface interface {
 	Handle(event IEventInterface)
 }
 
-// Gerenciado dos eventos Registra, Dispacha, Remove e Limpa
-type IEventDispacherInterface interface {
+// Gerenciado dos eventos Registra, Dispatcha, Remove e Limpa
+type IEventDispatcherInterface interface {
 	// Regitra o nome do evento e executa o evento
 	Register(eventName string, handler IEventHandlerInterface) error
 	// Faz com que os Handlers sejam executados
