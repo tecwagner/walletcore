@@ -19,6 +19,7 @@ func NewEventDispatcher() *EventDispatcher {
 	}
 }
 
+// Percorre a lista de eventos registrado e executa um por um pelo nome 
 func (evd *EventDispatcher) Dispatch(event IEventInterface) error {
 
 	if handlers, ok := evd.handlers[event.GetName()]; ok {
@@ -30,6 +31,7 @@ func (evd *EventDispatcher) Dispatch(event IEventInterface) error {
 	return nil
 }
 
+// Registra os eventos por nome
 func (evd *EventDispatcher) Register(eventName string, handler IEventHandlerInterface) error {
 
 	if _, ok := evd.handlers[eventName]; ok {
@@ -43,6 +45,7 @@ func (evd *EventDispatcher) Register(eventName string, handler IEventHandlerInte
 	return nil
 }
 
+// Remove eventos por nome
 func (evd *EventDispatcher) Remove(eventName string, handler IEventHandlerInterface) error {
 	if _, ok := evd.handlers[eventName]; ok {
 		for i, h := range evd.handlers[eventName] {
@@ -55,12 +58,14 @@ func (evd *EventDispatcher) Remove(eventName string, handler IEventHandlerInterf
 	return nil
 }
 
+// Limpa todos os eventos existente no handler
 func (evd *EventDispatcher) Clear() {
 
 	// Refaz o map de handler
 	evd.handlers = make(map[string][]IEventHandlerInterface)
 }
 
+// Verifica todos os eventos que foram executados
 func (evd *EventDispatcher) Has(eventName string, handler IEventHandlerInterface) bool {
 
 	// O evento existe
