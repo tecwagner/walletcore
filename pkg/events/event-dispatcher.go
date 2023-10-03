@@ -2,6 +2,7 @@ package events
 
 import (
 	"errors"
+	"sync"
 )
 
 // Criar midleawer de erros
@@ -19,13 +20,16 @@ func NewEventDispatcher() *EventDispatcher {
 	}
 }
 
-// Percorre a lista de eventos registrado e executa um por um pelo nome 
+// Percorre a lista de eventos registrado e executa um por um pelo nome
 func (evd *EventDispatcher) Dispatch(event IEventInterface) error {
 
 	if handlers, ok := evd.handlers[event.GetName()]; ok {
+		wg := &sync.WaitGroup{}
 		for _, handler := range handlers {
-			handler.Handle(event)
+			wg.Add(1)
+			go handler.Handle(event, wg)
 		}
+		wg.Wait()
 	}
 
 	return nil
@@ -59,10 +63,12 @@ func (evd *EventDispatcher) Remove(eventName string, handler IEventHandlerInterf
 }
 
 // Limpa todos os eventos existente no handler
-func (evd *EventDispatcher) Clear() {
+func (evd *EventDispatcher) Clear() error {
 
 	// Refaz o map de handler
 	evd.handlers = make(map[string][]IEventHandlerInterface)
+
+	return nil
 }
 
 // Verifica todos os eventos que foram executados

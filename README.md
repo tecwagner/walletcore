@@ -85,3 +85,16 @@
 
                 - event_dispatcher
                 - event_dispatcher_test
+
+# Implementando eventos create para as Trasaction
+
+    - Sempre que for trabalhar com eventos, crie os seus eventos de caso de uso
+
+    - internal
+        - event
+            - transaction_create
+
+    - useCase
+        - create_transaction
+            - create_transaction_dto: Foi adicionado os metodos que será implementado.
+            - create_transaction: Instanciado os novos metodos e implementado o dispatcher de criação
