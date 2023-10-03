@@ -65,3 +65,23 @@
                 - account-database
                 - client-database
                 - transaction-database
+
+# Package de comunicação por Eventos
+
+    - pkg
+        - events
+
+            - Interfaces
+
+                - event_interface
+
+                    - IEventInterface: Metodos de eventos que irá executar.
+
+                    - IEventHandlerInterface: Tem apenas um metodo obrigatorio. Que é responsavel por executar os eventos.
+
+                    - IEventDispacherInterface: Gerenciado dos eventos Registra, Dispacha, Remove e Limpa
+
+            - Dispacher
+
+                - event_dispatcher
+                - event_dispatcher_test
