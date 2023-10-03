@@ -43,6 +43,18 @@ func (evd *EventDispatcher) Register(eventName string, handler IEventHandlerInte
 	return nil
 }
 
+func (evd *EventDispatcher) Remove(eventName string, handler IEventHandlerInterface) error {
+	if _, ok := evd.handlers[eventName]; ok {
+		for i, h := range evd.handlers[eventName] {
+			if h == handler {
+				evd.handlers[eventName] = append(evd.handlers[eventName][:i], evd.handlers[eventName][i+1:]...)
+				return nil
+			}
+		}
+	}
+	return nil
+}
+
 func (evd *EventDispatcher) Clear() {
 
 	// Refaz o map de handler
