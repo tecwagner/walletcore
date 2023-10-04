@@ -86,7 +86,7 @@
                 - event_dispatcher
                 - event_dispatcher_test
 
-# Implementando eventos create para as Trasaction
+# Implementando eventos para criação de Trasação
 
     - Sempre que for trabalhar com eventos, crie os seus eventos de caso de uso
 
@@ -98,3 +98,8 @@
         - create_transaction
             - create_transaction_dto: Foi adicionado os metodos que será implementado.
             - create_transaction: Instanciado os novos metodos e implementado o dispatcher de criação
+
+# Implementand o modulo de container docker criando um banco de dados
+
+    - Criando um banco de dados MySQL
+        - dockerfile.
