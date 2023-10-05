@@ -20,7 +20,7 @@ func (setup *ClientDBTestSuite) SetupSuite() {
 	db, err := sql.Open("sqlite3", ":memory:")
 	setup.Nil(err)
 	setup.db = db
-	db.Exec("CREATE TABLE clients (id varchar(255) PRIMARY KEY, name varchar(255), email varchar(255), created_at date)")
+	db.Exec("CREATE TABLE clients (id varchar(255) PRIMARY KEY, name varchar(255), email varchar(255), created_at date, updated_at date)")
 	setup.clientDB = NewClientDB(db)	
 }
 

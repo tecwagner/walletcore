@@ -1,0 +1,28 @@
+
+POST http://localhost:8080/clients HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "John",
+    "email": "john.mars@gmail.com"
+}
+
+###
+
+POST http://localhost:8080/accounts HTTP/1.1
+Content-Type: application/json
+
+{
+    "client_id": "e2b4e071-2af3-4ca9-90fd-a4d9ecdfa587",
+}
+
+###
+
+POST http://localhost:8080/transactions HTTP/1.1
+Content-Type: application/json
+
+{
+    "account_from_id": "01c41f31-7a54-4349-85ce-a08d64c708b0",
+    "account_to_id": "06341469-5f87-49a0-ad87-4771a27e6802",
+    "amount": 10
+}

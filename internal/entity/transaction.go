@@ -11,9 +11,9 @@ import (
 type Transaction struct {
 	ID            string `json:"id"`
 	AccountFrom   *Account
-	AccountFromID string `json:"accountFromID"`
+	AccountFromID string `json:"account_from_id"`
 	AccountTo     *Account
-	AccountToID   string    `json:"accountToID"`
+	AccountToID   string    `json:"account_to_id"`
 	Amount        float64   `json:"amount"`
 	CreatedAt     time.Time `json:"createdAt"`
 }
