@@ -16,7 +16,6 @@ func NewAccountDB(db *sql.DB) *AccountDB {
 	}
 }
 
-
 func (acc *AccountDB) FindByID(id string) (*entity.Account, error) {
 	var account entity.Account
 	var client entity.Client
@@ -49,7 +48,7 @@ func (acc *AccountDB) FindByID(id string) (*entity.Account, error) {
 
 func (acc *AccountDB) Save(account *entity.Account) error {
 	stmt, err := acc.DB.Prepare("INSERT INTO accounts ( id, client_id,  balance, created_at) VALUES (?, ?, ?, ?)")
-	if err != nil { 
+	if err != nil {
 		return err
 	}
 
@@ -60,5 +59,19 @@ func (acc *AccountDB) Save(account *entity.Account) error {
 		return err
 	}
 
+	return nil
+}
+
+func (acc *AccountDB) UpdateBalance(account *entity.Account) error {
+	stmt, err := acc.DB.Prepare("UPDATE account SET balance = ? WHERE id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(account.Balance, account.ID)
+	if err != nil {
+		return err
+	}
 	return nil
 }

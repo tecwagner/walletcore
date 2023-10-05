@@ -28,6 +28,12 @@ type AccountGatewayMock struct {
 	mock.Mock
 }
 
+// UpdateBalance implements accountGateway.IAccountGateway.
+func (m *AccountGatewayMock) UpdateBalance(account *entity.Account) error {
+	args := m.Called(account)
+	return args.Error(0)
+}
+
 // Mock Interface Gateway
 func (m *AccountGatewayMock) Save(account *entity.Account) error {
 	args := m.Called(account)

@@ -99,7 +99,61 @@
             - create_transaction_dto: Foi adicionado os metodos que será implementado.
             - create_transaction: Instanciado os novos metodos e implementado o dispatcher de criação
 
-# Implementand o modulo de container docker criando um banco de dados
+# Implementando o modulo de container docker criando um banco de dados
 
     - Criando um banco de dados MySQL
-        - dockerfile.
+        - Dockerfile
+        - docker-compose.yaml
+
+# Implementando o modulo de webserver que será o coração da aplicação
+
+    - cmd
+        - wallercore
+            - main.go
+
+                - Instanciado a conexão com banco de dados
+
+                - Instanciado o web e webserver conroller
+                    - Que mapeia as rotas da aplicação
+
+# Criando o Modulo de Controller Handler
+
+    - Ele será o controller para executar os usecase e o handler
+
+    - internal
+        - web
+            - client_handler
+            - account_handler
+            - transaction_handler
+
+# Implementando webserver utilizando a biblioteca chi
+
+    - Tem como objetivo criar as rotas da aplicação
+    - Documentação: https://github.com/go-chi/chi
+
+    - internal
+        - web
+            - webserver
+                webserver.go
+
+# Criando os primeiros registros
+
+    - Acessar o banco de dados que está no docker.
+        - docker-compose exec mysql bash
+            - mysql -uroot -p wallet
+            - connction: root
+        - Cria Tabelas:
+            - Utilizando Migrations ou scripts
+                - internal
+                    - gateway
+                        - CREATE TABLE clients (id varchar(255) PRIMARY KEY, name varchar(255), email varchar(255), created_at date, updated_at date);
+                        - CREATE TABLE accounts (id varchar(255) PRIMARY KEY, client_id varchar(255), balance int, created_at date, updated_at date);
+                        - CREATE TABLE transactions (id varchar(255) PRIMARY KEY, account_id_from varchar(255), account_id_to varchar(255), amount int, created_at date);
+
+# Implementando Unit Of Work
+
+    - Por exemplo, em um contexto de banco de dados, uma "unit of work" geralmente se refere a uma transação de banco de dados. Uma transação é uma sequência de operações de banco de dados que devem ser executadas de forma atômica, ou seja, todas as operações devem ser concluídas com sucesso ou nenhuma delas deve ser aplicada. Isso ajuda a manter a consistência dos dados no banco de dados.
+
+    - pkg
+        - uow
+            - Foi implementado os metodos de Unit Of Work.

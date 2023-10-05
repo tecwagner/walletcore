@@ -46,6 +46,16 @@ func (uc *CreateTransactionUseCase) Execute(input CreateTransactionInputDTO) (*C
 		return nil, err
 	}
 
+	// Metodo que realiza alteração no saldo da conta
+	err = uc.AccountGateway.UpdateBalance(accountFrom)
+	if err != nil {
+		return nil, err
+	}
+	err = uc.AccountGateway.UpdateBalance(accountTo)
+	if err != nil {
+		return nil, err
+	}
+
 	output := &CreateTransactionOutputDTO{ID: transaction.ID}
 
 	// Enviado evento
