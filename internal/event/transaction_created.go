@@ -3,7 +3,7 @@ package event
 import "time"
 
 type TransactionCreated struct {
-	Name string
+	Name    string
 	Payload interface{}
 }
 

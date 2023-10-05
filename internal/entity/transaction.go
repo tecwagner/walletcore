@@ -2,7 +2,6 @@ package entity
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -28,7 +27,6 @@ func NewTransaction(accountFrom, accountTo *Account, amount float64) (*Transacti
 		CreatedAt:   time.Now(),
 	}
 
-	fmt.Println(transaction)
 	err := transaction.Validate()
 	if err != nil {
 		return nil, err

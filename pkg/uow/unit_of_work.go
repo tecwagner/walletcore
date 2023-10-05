@@ -21,7 +21,7 @@ type IUowInterface interface {
 	Do(ctx context.Context, fn func(uow *Uow) error) error
 	CommitOrRollback() error
 	Rollback() error
-	UnRegister(name string) error
+	UnRegister(name string)
 }
 
 func NewUow(ctx context.Context, db *sql.DB) *Uow {
