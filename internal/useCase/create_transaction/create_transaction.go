@@ -1,66 +1,111 @@
 package createTransaction
 
 import (
+	"context"
+
 	"github.com/tecwagner/walletcore-service/internal/entity"
 	accountGateway "github.com/tecwagner/walletcore-service/internal/gateway/account_gateway"
 	transactionGateway "github.com/tecwagner/walletcore-service/internal/gateway/transaction_gateway"
 	"github.com/tecwagner/walletcore-service/pkg/events"
+	"github.com/tecwagner/walletcore-service/pkg/uow"
 )
 
 func NewCreateTransactionUseCase(
-	transactionGateway transactionGateway.ITransactionGateway,
-	accountGateway accountGateway.IAccountGateway,
+	Uow uow.IUowInterface,
 	eventDispatcher events.IEventDispatcherInterface,
 	transactionCreated events.IEventInterface,
+	balanceUpdated events.IEventInterface,
 ) *CreateTransactionUseCase {
 	return &CreateTransactionUseCase{
-		TransactionGateway: transactionGateway,
-		AccountGateway:     accountGateway,
+		Uow:                Uow,
 		EventDispatcher:    eventDispatcher,
 		TransactionCreated: transactionCreated,
+		BalanceUpdated:     balanceUpdated,
 	}
 }
 
-func (uc *CreateTransactionUseCase) Execute(input CreateTransactionInputDTO) (*CreateTransactionOutputDTO, error) {
-	// Consultando a conta do cliente pagador
-	accountFrom, err := uc.AccountGateway.FindByID(input.AccountFromID)
-	if err != nil {
-		return nil, err
-	}
+func (uc *CreateTransactionUseCase) Execute(ctx context.Context, input CreateTransactionInputDTO) (*CreateTransactionOutputDTO, error) {
+	output := &CreateTransactionOutputDTO{}
+	balanceUpdatedOutput := &BalanceUpdatedOutputDTO{}
 
-	// Consultador a conta do cliente recebedor
-	accountTo, err := uc.AccountGateway.FindByID(input.AccountToID)
-	if err != nil {
-		return nil, err
-	}
+	// Aplicando o metodo Unit Of Work
+	// O Do Executa toda a operação ao mesmo tempo
+	err := uc.Uow.Do(ctx, func(_ *uow.Uow) error {
 
-	// Iniciando a nova transação
-	transaction, err := entity.NewTransaction(accountFrom, accountTo, input.Amount)
-	if err != nil {
-		return nil, err
-	}
+		accountRepository := uc.getAccountGateway(ctx)
+		transactionRepository := uc.getTransactionGateway(ctx)
 
-	// Criando a transação envia os dados para Banco de Dados
-	err = uc.TransactionGateway.Create(transaction)
-	if err != nil {
-		return nil, err
-	}
+		// Consultando a conta do cliente pagador
+		accountFrom, err := accountRepository.FindByID(input.AccountFromID)
+		if err != nil {
+			return err
+		}
 
-	// Metodo que realiza alteração no saldo da conta
-	err = uc.AccountGateway.UpdateBalance(accountFrom)
-	if err != nil {
-		return nil, err
-	}
-	err = uc.AccountGateway.UpdateBalance(accountTo)
-	if err != nil {
-		return nil, err
-	}
+		// Consultador a conta do cliente recebedor
+		accountTo, err := accountRepository.FindByID(input.AccountToID)
+		if err != nil {
+			return err
+		}
 
-	output := &CreateTransactionOutputDTO{ID: transaction.ID}
+		// Iniciando a nova transação
+		transaction, err := entity.NewTransaction(accountFrom, accountTo, input.Amount)
+		if err != nil {
+			return err
+		}
+
+		// Metodo que realiza alteração no saldo da conta
+		err = accountRepository.UpdateBalance(accountFrom)
+		if err != nil {
+			return err
+		}
+		err = accountRepository.UpdateBalance(accountTo)
+		if err != nil {
+			return err
+		}
+
+		// Criando a transação envia os dados para Banco de Dados
+		err = transactionRepository.Create(transaction)
+		if err != nil {
+			return err
+		}
+
+		output.ID = transaction.ID
+		output.AccountFromID = input.AccountFromID
+		output.AccountToID = input.AccountToID
+		output.Amount = input.Amount
+
+		balanceUpdatedOutput.AccountFromID = input.AccountFromID
+		balanceUpdatedOutput.AccountToID = input.AccountToID
+		balanceUpdatedOutput.BalanceAccountIDFrom = accountFrom.Balance
+		balanceUpdatedOutput.BalanceAccountIDTo = accountTo.Balance
+
+		return nil
+
+	})
+
+	if err != nil {
+		return nil, err
+	}
 
 	// Enviado evento
 	uc.TransactionCreated.SetPayload(output)
 	uc.EventDispatcher.Dispatch(uc.TransactionCreated)
 
 	return output, nil
+}
+
+func (uc *CreateTransactionUseCase) getAccountGateway(ctx context.Context) accountGateway.IAccountGateway {
+	repo, err := uc.Uow.GetRepository(ctx, "AccountDB")
+	if err != nil {
+		panic(err)
+	}
+	return repo.(accountGateway.IAccountGateway)
+}
+
+func (uc *CreateTransactionUseCase) getTransactionGateway(ctx context.Context) transactionGateway.ITransactionGateway {
+	repo, err := uc.Uow.GetRepository(ctx, "TransactionDB")
+	if err != nil {
+		panic(err)
+	}
+	return repo.(transactionGateway.ITransactionGateway)
 }

@@ -1,6 +1,9 @@
 package createAccount
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/tecwagner/walletcore-service/internal/entity"
 	accountGateway "github.com/tecwagner/walletcore-service/internal/gateway/account_gateway"
 	clientGateway "github.com/tecwagner/walletcore-service/internal/gateway/client_gateway"
@@ -23,12 +26,17 @@ func (uc *CreateAccountUseCase) Execute(input CreateAccountInputDTO) (*CreateAcc
 	// Cria uma conta passando o client por parametro
 	account := entity.NewAccount(client)
 
+	fmt.Println("Exec Account:", &account)
 	// Salva a conta
 	err = uc.AccountGateway.Save(account)
 	if err != nil {
 		return nil, err
 	}
-	return &CreateAccountOutputDTO{
-		ID: account.ID,
-	}, nil
+	output := &CreateAccountOutputDTO{
+		ID:        account.ID,
+		ClientID:  input.ClientID,
+		Balance:   account.Balance,
+		CreatedAt: time.Now(),
+	}
+	return output, nil
 }

@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	createAccount "github.com/tecwagner/walletcore-service/internal/useCase/create_account"
@@ -21,14 +22,17 @@ func (h *WebAccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request
 	var dto createAccount.CreateAccountInputDTO
 
 	err := json.NewDecoder(r.Body).Decode(&dto)
+
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		fmt.Println(err)
 		return
 	}
 
 	output, err := h.CreateAccountUseCase.Execute(dto)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println(err)
 		return
 	}
 
@@ -38,6 +42,6 @@ func (h *WebAccountHandler) CreateAccount(w http.ResponseWriter, r *http.Request
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	// w.Write([]byte{})
+
 	w.WriteHeader(http.StatusCreated)
 }

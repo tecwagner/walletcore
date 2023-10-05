@@ -1,14 +1,13 @@
 package createTransaction
 
 import (
-	accountGateway "github.com/tecwagner/walletcore-service/internal/gateway/account_gateway"
-	transactionGateway "github.com/tecwagner/walletcore-service/internal/gateway/transaction_gateway"
 	"github.com/tecwagner/walletcore-service/pkg/events"
+	"github.com/tecwagner/walletcore-service/pkg/uow"
 )
 
 type CreateTransactionUseCase struct {
-	TransactionGateway transactionGateway.ITransactionGateway
-	AccountGateway     accountGateway.IAccountGateway
+	Uow                uow.IUowInterface
 	EventDispatcher    events.IEventDispatcherInterface
 	TransactionCreated events.IEventInterface
+	BalanceUpdated     events.IEventInterface
 }

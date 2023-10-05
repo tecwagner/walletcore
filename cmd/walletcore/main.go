@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
@@ -15,6 +16,7 @@ import (
 	"github.com/tecwagner/walletcore-service/internal/web"
 	"github.com/tecwagner/walletcore-service/internal/web/webserver"
 	"github.com/tecwagner/walletcore-service/pkg/events"
+	"github.com/tecwagner/walletcore-service/pkg/uow"
 )
 
 func main() {
@@ -25,15 +27,26 @@ func main() {
 	// Iniciando as dependencias para disparos de email
 	eventDispatcher := setupEventDispatcher()
 	createTransactionEvent := event.NewTransactionCreated()
+	balanceUpdatedEvent := event.NewBalanceUpdated()
 	// eventDispatcher.Register("TransactionCreated", handler)
 
 	clientDB := clientDatabase.NewClientDB(db)
 	accountDB := accountDatabase.NewAccountDB(db)
-	transactionDB := transactionDatabase.NewTransactionDB(db)
+
+	ctx := context.Background()
+	uow := uow.NewUow(ctx, db)
+
+	uow.Register("AccountDB", func(tx *sql.Tx) interface{} {
+		return accountDatabase.NewAccountDB(db)
+	})
+
+	uow.Register("TransactionDB", func(tx *sql.Tx) interface{} {
+		return transactionDatabase.NewTransactionDB(db)
+	})
 
 	createClientUseCase := createClient.NewCreateClientUseCase(clientDB)
 	createAccountUseCase := createAccount.NewCreateAccountUseCase(accountDB, clientDB)
-	createTransactionUseCase := createTransaction.NewCreateTransactionUseCase(transactionDB, accountDB, eventDispatcher, createTransactionEvent)
+	createTransactionUseCase := createTransaction.NewCreateTransactionUseCase(uow, eventDispatcher, createTransactionEvent, balanceUpdatedEvent)
 
 	// Porta da aplicação
 	webserver := webserver.NewWebServer(":8080")

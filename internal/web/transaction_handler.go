@@ -23,12 +23,16 @@ func (h *WebTransactionHandler) CreateTransaction(w http.ResponseWriter, r *http
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+
 		return
 	}
 
-	output, err := h.CreateTransactionUseCase.Execute(dto)
+	ctx := r.Context()
+
+	output, err := h.CreateTransactionUseCase.Execute(ctx, dto)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
 		return
 	}
 
@@ -36,8 +40,9 @@ func (h *WebTransactionHandler) CreateTransaction(w http.ResponseWriter, r *http
 	err = json.NewEncoder(w).Encode(output)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+
 		return
 	}
-	// w.Write([]byte{})
+
 	w.WriteHeader(http.StatusCreated)
 }
