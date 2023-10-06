@@ -12,7 +12,7 @@
     - Mysql Banco de Dados
     - Kafka (Producer e Consumer)
 
-# Criando o projeto atarves do comando:
+# Criando o projeto atraves do comando:
 
     - go mod init github.com/tecwagner/walletcore-service
 
@@ -73,24 +73,17 @@
     - pkg
         - events
 
-            - Interfaces
+            - IEventInterface: Metodos de eventos que irá executar.
+            - IEventHandlerInterface: Tem apenas um metodo obrigatorio. Que é responsavel por executar os eventos.
+            - IEventDispatcherInterface: Gerenciador dos eventos com os metodos a serem implementados: Registra, Dispacha, Remove e Limpa
 
-                - event_interface
+        - Dispatcher Test unitario
+            - event_dispatcher
+            - event_dispatcher_test
 
-                    - IEventInterface: Metodos de eventos que irá executar.
+# Implementando o modelo eventos para criação de Transação implementando a interface de events
 
-                    - IEventHandlerInterface: Tem apenas um metodo obrigatorio. Que é responsavel por executar os eventos.
-
-                    - IEventDispacherInterface: Gerenciado dos eventos Registra, Dispacha, Remove e Limpa
-
-            - Dispacher
-
-                - event_dispatcher
-                - event_dispatcher_test
-
-# Implementando eventos para criação de Trasação
-
-    - Sempre que for trabalhar com eventos, crie os seus eventos de caso de uso
+    - Sempre que for trabalhar com eventos, crie os seus eventos de caso de uso utilizando da interface criada para enventos
 
     - internal
         - event
@@ -117,6 +110,9 @@
 
                 - Instanciado o web e webserver conroller
                     - Que mapeia as rotas da aplicação
+
+                - Instanciado o serviço que comunica kafka
+                - Instanciado os event dispatched para execução dos eventos e regitro no kafka
 
 # Criando o Modulo de Controller Handler
 
@@ -160,7 +156,7 @@
         - uow
             - Foi implementado os metodos de Unit Of Work.
 
-# Implementando o Kafka ao Projeto para consumir as mensagens
+# Implementando o Kafka ao Projeto para produzir e consumir as mensagens
 
         - pkg
             - kafka
@@ -169,17 +165,21 @@
 
 # Criando TransactionHandler
 
+    - Implementado o handle para fins de registro que serão enviados para o kafka e registrado na base de datos.
+
     - internal
         - event
             - handler
                 - transaction_created_kafka
-
+                - balance_uptaded_kafka
                     - Criando os metodo Handle para o Producer das mensagens para o kafka via envento handler
 
 # Registrando handler
 
     - No main.go
         - Registra o kafka mapeando a configuração do cliente do kafka
+
+        - Registrando o envio dos enventos ao kafka utilizados da interface implementada de event handler e dispatched
 
 # Disparando o evento para o kafka
 
@@ -188,4 +188,4 @@
         - Criando um Topic: balances.
             - Para que os demais micro serviços consome esses dados.
 
-            - Para registro e controle das tranações realizadas.
+            - Para registro e controle das transações realizadas.
