@@ -5,8 +5,10 @@ import (
 	"database/sql"
 	"fmt"
 
+	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/tecwagner/walletcore-service/internal/event"
+	"github.com/tecwagner/walletcore-service/internal/event/handler"
 	accountDatabase "github.com/tecwagner/walletcore-service/internal/infrastructure/database/account-database"
 	clientDatabase "github.com/tecwagner/walletcore-service/internal/infrastructure/database/client-database"
 	transactionDatabase "github.com/tecwagner/walletcore-service/internal/infrastructure/database/transaction-database"
@@ -16,6 +18,7 @@ import (
 	"github.com/tecwagner/walletcore-service/internal/web"
 	"github.com/tecwagner/walletcore-service/internal/web/webserver"
 	"github.com/tecwagner/walletcore-service/pkg/events"
+	"github.com/tecwagner/walletcore-service/pkg/kafka"
 	"github.com/tecwagner/walletcore-service/pkg/uow"
 )
 
@@ -24,11 +27,20 @@ func main() {
 	db := setupDatabase()
 	defer db.Close()
 
+	// Mapeando o configMap Kafka
+	configMap := ckafka.ConfigMap{
+		"bootstrap.servers": "kafka:29092",
+		"group.id":          "wallet",
+	}
+	kafkaProducer := kafka.NewProducer(&configMap)
+
 	// Iniciando as dependencias para disparos de email
 	eventDispatcher := setupEventDispatcher()
 	createTransactionEvent := event.NewTransactionCreated()
 	balanceUpdatedEvent := event.NewBalanceUpdated()
-	// eventDispatcher.Register("TransactionCreated", handler)
+
+	// Registrando o evento handler Transaction Criado no Kafka Producer
+	eventDispatcher.Register("TransactionCreated", handler.NewTransactionCreatedKafkaHandler(kafkaProducer))
 
 	clientDB := clientDatabase.NewClientDB(db)
 	accountDB := accountDatabase.NewAccountDB(db)
@@ -76,3 +88,5 @@ func setupDatabase() *sql.DB {
 func setupEventDispatcher() *events.EventDispatcher {
 	return events.NewEventDispatcher()
 }
+
+// func setupCkafkaConfigMap()

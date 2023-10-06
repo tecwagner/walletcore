@@ -9,6 +9,8 @@
     - Moks Utiliando biblioteca testify/mock"
     - Suite de Test Utiliando biblioteca testify/suite"
     - sqlite3 para teste de integração
+    - Mysql Banco de Dados
+    - Kafka (Producer e Consumer)
 
 # Criando o projeto atarves do comando:
 
@@ -158,14 +160,29 @@
         - uow
             - Foi implementado os metodos de Unit Of Work.
 
-# Implementando o Kafka ao Projeto para consumir as mensagens 
-
-    - Criando o Kafka producer
-    - Criando o Kafka consumer
+# Implementando o Kafka ao Projeto para consumir as mensagens
 
         - pkg
             - kafka
+                - Criando o Kafka producer
+                - Criando o Kafka consumer
 
 # Criando TransactionHandler
 
-    
+    - internal
+        - event
+            - handler
+                - transaction_created_kafka
+
+                    - Criando os metodo Handle para o Producer das mensagens para o kafka via envento handler
+
+# Registrando handler
+
+    - No main.go
+        - Registra o kafka mapeando a configuração do cliente do kafka
+
+# Disparando o evento para o kafka
+
+    - Criando um container no doker do control-center para registrar os eventos.
+        - Criando um Topic: transctions.
+            - Para que os demais micro serviços consome esses dados.
