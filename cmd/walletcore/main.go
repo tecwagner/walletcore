@@ -34,13 +34,14 @@ func main() {
 	}
 	kafkaProducer := kafka.NewProducer(&configMap)
 
-	// Iniciando as dependencias para disparos de email
+	// Iniciando as dependencias de registro de event dispatched
 	eventDispatcher := setupEventDispatcher()
 	createTransactionEvent := event.NewTransactionCreated()
 	balanceUpdatedEvent := event.NewBalanceUpdated()
 
 	// Registrando o evento handler Transaction Criado no Kafka Producer
 	eventDispatcher.Register("TransactionCreated", handler.NewTransactionCreatedKafkaHandler(kafkaProducer))
+	eventDispatcher.Register("BalanceUpdated", handler.NewUpdatedBalanceKafkaHandler(kafkaProducer))
 
 	clientDB := clientDatabase.NewClientDB(db)
 	accountDB := accountDatabase.NewAccountDB(db)
