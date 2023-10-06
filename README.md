@@ -157,3 +157,15 @@
     - pkg
         - uow
             - Foi implementado os metodos de Unit Of Work.
+
+# Implementando o Kafka ao Projeto para consumir as mensagens 
+
+    - Criando o Kafka producer
+    - Criando o Kafka consumer
+
+        - pkg
+            - kafka
+
+# Criando TransactionHandler
+
+    
