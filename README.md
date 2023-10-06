@@ -185,4 +185,7 @@
 
     - Criando um container no doker do control-center para registrar os eventos.
         - Criando um Topic: transctions.
+        - Criando um Topic: balances.
             - Para que os demais micro serviços consome esses dados.
+
+            - Para registro e controle das tranações realizadas.

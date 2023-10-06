@@ -87,9 +87,13 @@ func (uc *CreateTransactionUseCase) Execute(ctx context.Context, input CreateTra
 		return nil, err
 	}
 
-	// Enviado evento
+	// Registrando e Enviado evento kafka Transaction
 	uc.TransactionCreated.SetPayload(output)
 	uc.EventDispatcher.Dispatch(uc.TransactionCreated)
+
+	// Registrando e Enviado evento kafka Balance
+	uc.BalanceUpdated.SetPayload(balanceUpdatedOutput)
+	uc.EventDispatcher.Dispatch(uc.BalanceUpdated)
 
 	return output, nil
 }
