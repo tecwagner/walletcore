@@ -50,3 +50,15 @@ func (suite *ClientDBTestSuite) TestGet() {
 	suite.Equal(client.Email, clientDB.Email)
 }
 
+func (suite *ClientDBTestSuite) TestSaveWithDuplicateEmail() {
+	
+	client := &entity.Client{ID: uuid.NewString(), Name: "joh", Email: "joh@example.com"}
+	err := suite.clientDB.Save(client)
+	suite.Nil(err)
+
+	duplicateClient := &entity.Client{ID: uuid.NewString(), Name: "jane", Email: "joh@example.com"}
+	result := suite.clientDB.IsEmailExists(duplicateClient.Email)
+
+	suite.True(result)
+}
+
