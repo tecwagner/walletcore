@@ -14,3 +14,11 @@ type CreateClientOutputDTO struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+type JSONError struct {
+	Message string `json:"message"`
+}
+
+func (e JSONError) Error() string {
+	return e.Message
+}

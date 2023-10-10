@@ -12,6 +12,12 @@ func NewCreateClientUseCase(clientGateway clientGateway.IClientGateway) *CreateC
 }
 
 func (uc *CreateClientUseCase) Execute(input CreateClientInputDTO) (*CreateClientOutputDTO, error) {
+
+	if uc.ClientGateway.IsEmailExists(input.Email) {
+
+		return nil, &JSONError{Message: "email is not unique"}
+	}
+
 	client, err := entity.NewClient(input.Name, input.Email)
 
 	// Criar uma tratativa de error

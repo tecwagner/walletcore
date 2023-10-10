@@ -45,6 +45,9 @@ func (t *Transaction) Validate() error {
 	if t.Amount <= 0 {
 		return errors.New("value must be greater than zero")
 	}
+	if t.AccountFromID == t.AccountToID {
+		return errors.New("cannot transfer to the same account")
+	}
 	if t.AccountFrom.Balance < t.Amount {
 		return errors.New("insufficient balance")
 	}

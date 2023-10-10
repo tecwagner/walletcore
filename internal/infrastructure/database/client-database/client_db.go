@@ -1,4 +1,4 @@
-package  clientDatabase
+package clientDatabase
 
 import (
 	"database/sql"
@@ -44,4 +44,20 @@ func (cli *ClientDB) Save(client *entity.Client) error {
 		return err
 	}
 	return nil
+}
+
+func (cli *ClientDB) IsEmailExists(email string) bool {
+	client := &entity.Client{}
+	stmt, err := cli.DB.Prepare("SELECT id FROM clients WHERE email = ?")
+	if err != nil {
+		return	false
+	}
+	defer stmt.Close()
+
+	row := stmt.QueryRow(email)
+	if err := row.Scan(&client.ID); err != nil {
+		return false
+	}
+
+	return true
 }

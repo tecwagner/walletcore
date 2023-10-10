@@ -18,3 +18,8 @@ func (m *ClientGatewayMock) Get(id string) (*entity.Client, error) {
 	args := m.Called(id)
 	return args.Get(0).(*entity.Client), args.Error(1)
 }
+
+func (m *ClientGatewayMock) IsEmailExists(email string) bool {
+	args := m.Called(email)
+	return args.Bool(0)
+}
