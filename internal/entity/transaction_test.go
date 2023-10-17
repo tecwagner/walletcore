@@ -41,8 +41,8 @@ func TestCreateTransactionWithInsuficientBalanca(t *testing.T) {
 	assert.Equal(t, 1000.0, accountTo.Balance)
 }
 func TestCreateTransactionWithForTheSameAccount(t *testing.T) {
-	client1, _ := NewClient( "john", "john@example.com")
-	accountFrom := NewAccount( client1)
+	client1, _ := NewClient("john", "john@example.com")
+	accountFrom := NewAccount(client1)
 
 	accountTo := NewAccount(client1)
 

@@ -11,9 +11,9 @@ import (
 
 type AccountDBTestSuite struct {
 	suite.Suite
-	db *sql.DB
+	db        *sql.DB
 	accountDB *AccountDB
-	client *entity.Client
+	client    *entity.Client
 }
 
 func (setup *AccountDBTestSuite) SetupSuite() {
@@ -43,8 +43,7 @@ func (setup *AccountDBTestSuite) TestSave() {
 }
 
 func (setup *AccountDBTestSuite) TestFindByID() {
-	setup.db.Exec("INSERT INTO clients (id, name, email, created_at) VALUES (?, ?, ?, ?)", setup.client.ID, setup.client.Name, setup.client.Email, setup.client.CreatedAt,
-	)	
+	setup.db.Exec("INSERT INTO clients (id, name, email, created_at) VALUES (?, ?, ?, ?)", setup.client.ID, setup.client.Name, setup.client.Email, setup.client.CreatedAt)
 
 	account := entity.NewAccount(setup.client)
 	err := setup.accountDB.Save(account)
@@ -57,4 +56,4 @@ func (setup *AccountDBTestSuite) TestFindByID() {
 	setup.Equal(account.Client.ID, accountDB.Client.ID)
 	setup.Equal(account.Client.Name, accountDB.Client.Name)
 	setup.Equal(account.Client.Email, accountDB.Client.Email)
-} 
+}

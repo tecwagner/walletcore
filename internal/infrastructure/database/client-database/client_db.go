@@ -20,7 +20,7 @@ func (cli *ClientDB) Get(id string) (*entity.Client, error) {
 	client := &entity.Client{}
 	stmt, err := cli.DB.Prepare("SELECT id, name, email, created_at FROM clients WHERE id = ?")
 	if err != nil {
-		return	nil, err
+		return nil, err
 	}
 	defer stmt.Close()
 
@@ -33,8 +33,8 @@ func (cli *ClientDB) Get(id string) (*entity.Client, error) {
 }
 
 func (cli *ClientDB) Save(client *entity.Client) error {
-	
-	stmt, err := cli.DB.Prepare("INSERT INTO clients ( id, name, email, created_at) VALUES (?, ?, ?, ?)",)
+
+	stmt, err := cli.DB.Prepare("INSERT INTO clients ( id, name, email, created_at) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func (cli *ClientDB) IsEmailExists(email string) bool {
 	client := &entity.Client{}
 	stmt, err := cli.DB.Prepare("SELECT id FROM clients WHERE email = ?")
 	if err != nil {
-		return	false
+		return false
 	}
 	defer stmt.Close()
 
