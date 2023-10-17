@@ -10,7 +10,7 @@ import (
 type Client struct {
 	ID        string     `json:"id"`
 	Name      string     `json:"name"`
-	Email     string     `json:"email"`
+	Email     string     `json:"email"`	
 	Accounts  []*Account `json:"accounts"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`

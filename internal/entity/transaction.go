@@ -31,6 +31,7 @@ func NewTransaction(accountFrom, accountTo *Account, amount float64) (*Transacti
 	if err != nil {
 		return nil, err
 	}
+
 	transaction.Commit()
 	return transaction, nil
 }
@@ -45,11 +46,14 @@ func (t *Transaction) Validate() error {
 	if t.Amount <= 0 {
 		return errors.New("value must be greater than zero")
 	}
-	if t.AccountFromID == t.AccountToID {
-		return errors.New("cannot transfer to the same account")
-	}
 	if t.AccountFrom.Balance < t.Amount {
 		return errors.New("insufficient balance")
+	}
+	if t.AccountFrom.ID == t.AccountTo.ID {
+		return errors.New("cannot transfer to the same account")
+	}
+	if t.AccountFrom == nil || t.AccountTo == nil {
+		return errors.New("source and destination accounts must be specified")
 	}
 	return nil
 }

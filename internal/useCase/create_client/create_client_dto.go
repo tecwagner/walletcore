@@ -3,8 +3,8 @@ package createClient
 import "time"
 
 type CreateClientInputDTO struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
 }
 
 type CreateClientOutputDTO struct {

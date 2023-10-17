@@ -3,8 +3,9 @@ POST http://localhost:8080/clients HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "John",
-    "email": "john.mars@gmail.com"
+    "name": "CNPJOTO",
+    "email": "cnpjoto55@gmail.com",
+    "is_seller": true
 }
 
 ###
@@ -13,7 +14,7 @@ POST http://localhost:8080/accounts HTTP/1.1
 Content-Type: application/json
 
 {
-    "client_id": "eb66ba2a-f53b-4ba3-b44a-84a73def3790"
+    "client_id": "134d4f96-85a1-4e78-84fb-6453707049f7"
 }
 
 ###
