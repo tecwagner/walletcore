@@ -76,6 +76,7 @@ func main() {
 	fmt.Println("Server is running", webserver.WebServerPort)
 
 	webserver.Start()
+	
 }
 
 func setupDatabase() *sql.DB {
@@ -90,4 +91,3 @@ func setupEventDispatcher() *events.EventDispatcher {
 	return events.NewEventDispatcher()
 }
 
-// func setupCkafkaConfigMap()

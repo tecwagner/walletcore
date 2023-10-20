@@ -33,7 +33,7 @@ func (h *WebClientHandler) CreateClient(w http.ResponseWriter, r *http.Request) 
 		fmt.Println("Erro Email")
 		if emailUniqueError, ok := err.(*createClient.JSONError); ok {
 			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusConflict) // Use o código de status HTTP correto para conflito
+			w.WriteHeader(http.StatusConflict)
 			responseJSON := createClient.JSONError{Message: emailUniqueError.Error()}
 			jsonErrorBytes, _ := json.Marshal(responseJSON)
 			w.Write(jsonErrorBytes)
@@ -50,6 +50,5 @@ func (h *WebClientHandler) CreateClient(w http.ResponseWriter, r *http.Request) 
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	// w.Write([]byte{})
 	w.WriteHeader(http.StatusCreated)
 }

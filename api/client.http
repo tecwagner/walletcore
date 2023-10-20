@@ -1,26 +1,30 @@
 
 POST http://localhost:8080/clients HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjozMDE2MjM5MDIyfQ.hR6wMvqk82Kvk0DaEPzdy8u8zfv1TZhJzVwbneasYk8
 
 {
-    "name": "CNPJOTO",
-    "email": "cnpjoto55@gmail.com",
-    "is_seller": true
+    "name": "Amanda",
+    "email": "amanda.daniele22@gmail.com",
+    "password": "123"
+
 }
 
 ###
 
 POST http://localhost:8080/accounts HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjozMDE2MjM5MDIyfQ.hR6wMvqk82Kvk0DaEPzdy8u8zfv1TZhJzVwbneasYk8
 
 {
-    "client_id": "134d4f96-85a1-4e78-84fb-6453707049f7"
+    "client_id": "6bbcfb1d-b39e-42b0-bfe9-fe3320260aef"
 }
 
 ###
 
 POST http://localhost:8080/transactions HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjozMDE2MjM5MDIyfQ.hR6wMvqk82Kvk0DaEPzdy8u8zfv1TZhJzVwbneasYk8
 
 {
     "account_id_from": "271ce2a1-d4bb-4345-9104-9299da1c5bb7",
