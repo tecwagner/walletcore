@@ -11,7 +11,7 @@ import (
 
 func TestCreateAccountUseCase_Execute(t *testing.T) {
 	// Create a new account
-	client, _ := entity.NewClient("John", "john@example.com")
+	client, _ := entity.NewClient("John", "john@example.com", "123")
 	clientMock := &mocks.ClientGatewayMock{}
 	clientMock.On("Get", client.ID).Return(client, nil)
 

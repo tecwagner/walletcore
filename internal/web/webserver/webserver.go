@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/tecwagner/walletcore-service/middleware/authentication"
 )
 
 type WebServer struct {
@@ -28,8 +29,8 @@ func (s *WebServer) AddHandler(path string, handler http.HandlerFunc) {
 func (s *WebServer) Start() error {
 	s.Router.Use(middleware.Logger)
 	for path, handler := range s.Handlers {
-		s.Router.Post(path, handler)
-		s.Router.Get(path, handler)
+		s.Router.With(authentication.JWTAuthenticateMiddleware).Post(path, handler)
+		s.Router.With(authentication.JWTAuthenticateMiddleware).Get(path, handler)
 	}
 	err := http.ListenAndServe(s.WebServerPort, s.Router)
 	if err != nil {

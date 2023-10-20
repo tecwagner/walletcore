@@ -7,7 +7,7 @@ import (
 )
 
 func TestCreatedNewClient(t *testing.T) {
-	client, err := NewClient("Joarez", "joarez@tekpixel.com")
+	client, err := NewClient("Joarez", "joarez@tekpixel.com", "1234")
 	assert.Nil(t, err)
 	assert.NotNil(t, client)
 	assert.Equal(t, "Joarez", client.Name)
@@ -17,34 +17,27 @@ func TestCreatedNewClient(t *testing.T) {
 
 
 func TestCreatedNewClientWhenArgsInvalid(t *testing.T) {
-	client, err := NewClient("", "")
+	client, err := NewClient("", "", "")
 	assert.NotNil(t, err)
 	assert.Nil(t, client)
 }
 
 func TestUpdatedClient(t *testing.T) {
-	client, _ := NewClient("Joarez", "joarez@tekpixel.com")
-	err := client.Update("Joares", "joares@tekpixel.com")
+	client, _ := NewClient("Joarez", "joarez@tekpixel.com", "1234")
+	err := client.Update("Joares", "joares@tekpixel.com", "123456")
 	assert.Nil(t, err)
 	assert.Equal(t, "Joares", client.Name)
 	assert.Equal(t, "joares@tekpixel.com", client.Email)
+	assert.Equal(t, "123456", client.Password)
 }
 func TestUpdatedClientWithInvalidArgs(t *testing.T) {
-	client, _ := NewClient("Joarez", "joarez@tekpixel.com")
-	err := client.Update("", "joares@tekpixel.com")
+	client, _ := NewClient("Joarez", "joarez@tekpixel.com", "123")
+	err := client.Update("", "joares@tekpixel.com","123")
 	assert.Contains(t, err.Error(), "name is required")
 }
-func TestCreatedNewSellerClient(t *testing.T) {
-	client, err := NewClient("Vendedor", "vendedor@example.com")
-	assert.Nil(t, err)
-	assert.NotNil(t, client)
-	assert.Equal(t, "Vendedor", client.Name)
-	assert.Equal(t, "vendedor@example.com", client.Email)
-}
-
 
 func TestAddAccountToClient(t *testing.T) {
-	client, _ := NewClient("Joarez", "joarez@tekpixel.com")
+	client, _ := NewClient("Joarez", "joarez@tekpixel.com", "123")
 	account := NewAccount(client)
 	err := client.AddAccount(account)
 	assert.Nil(t, err)

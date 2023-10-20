@@ -14,11 +14,11 @@ import (
 
 func TestCreateTransactionUseCase_Execute(t *testing.T) {
 	// Create a new account
-	payer, _ := entity.NewClient("John", "john@example.com")
+	payer, _ := entity.NewClient("John", "john@example.com", "123")
 	accountFrom := entity.NewAccount(payer)
 	accountFrom.Credit(1000)
 
-	payee, _ := entity.NewClient("Joh Dou", "johdou@example.com")
+	payee, _ := entity.NewClient("Joh Dou", "johdou@example.com", "123")
 	accountTo := entity.NewAccount(payee)
 	accountTo.Credit(1000)
 

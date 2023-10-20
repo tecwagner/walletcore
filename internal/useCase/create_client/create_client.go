@@ -18,7 +18,7 @@ func (uc *CreateClientUseCase) Execute(input CreateClientInputDTO) (*CreateClien
 		return nil, &JSONError{Message: "email is not unique"}
 	}
 
-	client, err := entity.NewClient(input.Name, input.Email)
+	client, err := entity.NewClient(input.Name, input.Email, input.Password)
 
 	// Criar uma tratativa de error
 	if err != nil {

@@ -20,7 +20,7 @@ func (setup *ClientDBTestSuite) SetupSuite() {
 	db, err := sql.Open("sqlite3", ":memory:")
 	setup.Nil(err)
 	setup.db = db
-	db.Exec("CREATE TABLE clients (id varchar(255) PRIMARY KEY, name varchar(255), email varchar(255), created_at date, updated_at date)")
+	db.Exec("CREATE TABLE clients (id varchar(255) PRIMARY KEY, name varchar(255), email varchar(255), password varchar(50), created_at date, updated_at date)")
 	setup.clientDB = NewClientDB(db)
 }
 
@@ -34,13 +34,13 @@ func TestClientDBTestSuite(t *testing.T) {
 }
 
 func (suite *ClientDBTestSuite) TestSave() {
-	client := &entity.Client{ID: uuid.NewString(), Name: "joh", Email: "joh@example.com"}
+	client := &entity.Client{ID: uuid.NewString(), Name: "joh", Email: "joh@example.com", Password: "123"}
 	err := suite.clientDB.Save(client)
 	suite.Nil(err)
 }
 
 func (suite *ClientDBTestSuite) TestGet() {
-	client, _ := entity.NewClient("joh", "joh@example.com")
+	client, _ := entity.NewClient("joh", "joh@example.com", "123")
 	suite.clientDB.Save(client)
 
 	clientDB, err := suite.clientDB.Get(client.ID)
@@ -48,15 +48,16 @@ func (suite *ClientDBTestSuite) TestGet() {
 	suite.Equal(client.ID, clientDB.ID)
 	suite.Equal(client.Name, clientDB.Name)
 	suite.Equal(client.Email, clientDB.Email)
+	suite.Equal(client.Password, clientDB.Password)
 }
 
 func (suite *ClientDBTestSuite) TestSaveWithDuplicateEmail() {
 
-	client := &entity.Client{ID: uuid.NewString(), Name: "joh", Email: "joh@example.com"}
+	client := &entity.Client{ID: uuid.NewString(), Name: "joh", Email: "joh@example.com", Password: "123"}
 	err := suite.clientDB.Save(client)
 	suite.Nil(err)
 
-	duplicateClient := &entity.Client{ID: uuid.NewString(), Name: "jane", Email: "joh@example.com"}
+	duplicateClient := &entity.Client{ID: uuid.NewString(), Name: "jane", Email: "joh@example.com", Password: "123"}
 	result := suite.clientDB.IsEmailExists(duplicateClient.Email)
 
 	suite.True(result)

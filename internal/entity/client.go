@@ -11,16 +11,18 @@ type Client struct {
 	ID        string     `json:"id"`
 	Name      string     `json:"name"`
 	Email     string     `json:"email"`	
+	Password  string	 `json:"password"`
 	Accounts  []*Account `json:"accounts"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 }
 
-func NewClient(name, email string) (*Client, error) {
+func NewClient(name, email, password string) (*Client, error) {
 	client := &Client{
 		ID:        uuid.New().String(),
 		Name:      name,
 		Email:     email,
+		Password: password,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -42,12 +44,17 @@ func (c *Client) IsValidated() error {
 		return errors.New("email is required")
 	}
 
+	if c.Password == "" {
+		return errors.New("password is required")
+	}
+
 	return nil
 }
 
-func (c *Client) Update(name, email string) error {
+func (c *Client) Update(name, email, password string) error {
 	c.Name = name
 	c.Email = email
+	c.Password  = password
 	c.UpdatedAt = time.Now()
 	err := c.IsValidated()
 	if err != nil {

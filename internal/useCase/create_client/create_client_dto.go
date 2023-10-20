@@ -5,6 +5,7 @@ import "time"
 type CreateClientInputDTO struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type CreateClientOutputDTO struct {
