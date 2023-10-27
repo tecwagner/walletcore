@@ -23,7 +23,7 @@ func (suite *TransactionDBTestSuite) SetupSuite() {
 	db, err := sql.Open("sqlite3", ":memory:")
 	suite.Nil(err)
 	suite.db = db
-	db.Exec("CREATE TABLE clients (id varchar(255) PRIMARY KEY NOT NULL, name varchar(255) NOT NULL, email varchar(255) NOT NULL, password varchar(50), created_at date, updated_at date)")
+	db.Exec("CREATE TABLE clients (id varchar(255) PRIMARY KEY NOT NULL, name varchar(255) NOT NULL, email varchar(255) NOT NULL, password varchar(150), created_at date, updated_at date)")
 	db.Exec("CREATE TABLE accounts (id varchar(255) PRIMARY KEY NOT NULL, client_id varchar(255) NOT NULL, balance int, created_at date, updated_at date)")
 	db.Exec("CREATE TABLE transactions (id varchar(255) PRIMARY KEY NOT NULL, account_id_from varchar(255) NOT NULL, account_id_to varchar(255) NOT NULL, amount int, created_at date)")
 	client, err := entity.NewClient("John", "j@j.com", "123")

@@ -17,5 +17,6 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
+	golang.org/x/crypto v0.14.0
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
