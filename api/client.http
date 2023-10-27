@@ -1,12 +1,22 @@
 
-POST http://localhost:8080/clients HTTP/1.1
+POST http://localhost:8080/login HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjozMDE2MjM5MDIyfQ.hR6wMvqk82Kvk0DaEPzdy8u8zfv1TZhJzVwbneasYk8
 
 {
-    "name": "Amanda",
-    "email": "amanda.daniele22@gmail.com",
-    "password": "123"
+    "email": "dont.doe@gmail.com",
+    "password": "1234"
+}
+
+####
+
+POST http://localhost:8080/clients HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRvbnQuZG9lQGdtYWlsLmNvbSIsImV4cCI6MTY5ODQzNDM4MywiaWQiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIiLCJzdWIiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIifQ.lrQ47AqzragBsVNWNJ99IDnRB7z5YWEvY5QDKGBmq00
+
+{
+    "name": "Wagner Oliveira",
+    "email": "wagner.oliveira@gmail.com",
+    "password": "1234"
 
 }
 
@@ -14,20 +24,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3O
 
 POST http://localhost:8080/accounts HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjozMDE2MjM5MDIyfQ.hR6wMvqk82Kvk0DaEPzdy8u8zfv1TZhJzVwbneasYk8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRvbnQuZG9lQGdtYWlsLmNvbSIsImV4cCI6MTY5ODQzNDM4MywiaWQiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIiLCJzdWIiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIifQ.lrQ47AqzragBsVNWNJ99IDnRB7z5YWEvY5QDKGBmq00
 
 {
-    "client_id": "6bbcfb1d-b39e-42b0-bfe9-fe3320260aef"
+    "client_id": "7965d1e5-e634-4a7c-94a1-f7a8e5980d33"
 }
 
 ###
 
 POST http://localhost:8080/transactions HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjozMDE2MjM5MDIyfQ.hR6wMvqk82Kvk0DaEPzdy8u8zfv1TZhJzVwbneasYk8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRvbnQuZG9lQGdtYWlsLmNvbSIsImV4cCI6MTY5ODQzNDM4MywiaWQiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIiLCJzdWIiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIifQ.lrQ47AqzragBsVNWNJ99IDnRB7z5YWEvY5QDKGBmq00
 
 {
-    "account_id_from": "271ce2a1-d4bb-4345-9104-9299da1c5bb7",
-    "account_id_to": "44de9efe-9015-48c9-a3a5-9da15c2f39bc",
-    "amount": 100
+    "account_id_from": "77d35a02-1a8a-45d9-80ba-5603df12bab0",
+    "account_id_to": "34627fd4-65ad-40de-8972-6ef67ee945f4",
+    "amount": 200
 }

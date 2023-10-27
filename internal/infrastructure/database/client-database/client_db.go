@@ -2,6 +2,7 @@ package clientDatabase
 
 import (
 	"database/sql"
+	"errors"
 
 	"github.com/tecwagner/walletcore-service/internal/entity"
 )
@@ -32,14 +33,34 @@ func (cli *ClientDB) Get(id string) (*entity.Client, error) {
 	return client, nil
 }
 
+func (cli *ClientDB) FindByClient(email string) (*entity.Client, error) {
+	client := &entity.Client{}
+	stmt, err := cli.DB.Prepare("SELECT id, email, password FROM clients WHERE email = ? ",)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	var passwordHash string
+	row := stmt.QueryRow(email)
+	if err := row.Scan(&client.ID, &client.Email, &passwordHash); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.New("customer not found")
+		}
+		return nil, err
+	}
+	client.Password = passwordHash
+	return client, nil
+}
+
 func (cli *ClientDB) Save(client *entity.Client) error {
 
-	stmt, err := cli.DB.Prepare("INSERT INTO clients ( id, name, email, created_at, updated_at) VALUES (?, ?, ?, ?, ?)")
+	stmt, err := cli.DB.Prepare("INSERT INTO clients ( id, name, email, password, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(client.ID, client.Name, client.Email, client.CreatedAt, client.UpdatedAt)
+	_, err = stmt.Exec(client.ID, client.Name, client.Email, client.Password, client.CreatedAt, client.UpdatedAt)
 	if err != nil {
 		return err
 	}

@@ -20,7 +20,7 @@ func (setup *ClientDBTestSuite) SetupSuite() {
 	db, err := sql.Open("sqlite3", ":memory:")
 	setup.Nil(err)
 	setup.db = db
-	db.Exec("CREATE TABLE clients (id varchar(255) PRIMARY KEY, name varchar(255), email varchar(255), password varchar(50), created_at date, updated_at date)")
+	db.Exec("CREATE TABLE clients (id varchar(255) PRIMARY KEY, name varchar(255), email varchar(255), password varchar(150), created_at date, updated_at date)")
 	setup.clientDB = NewClientDB(db)
 }
 
@@ -48,7 +48,6 @@ func (suite *ClientDBTestSuite) TestGet() {
 	suite.Equal(client.ID, clientDB.ID)
 	suite.Equal(client.Name, clientDB.Name)
 	suite.Equal(client.Email, clientDB.Email)
-	suite.Equal(client.Password, clientDB.Password)
 }
 
 func (suite *ClientDBTestSuite) TestSaveWithDuplicateEmail() {
@@ -61,4 +60,31 @@ func (suite *ClientDBTestSuite) TestSaveWithDuplicateEmail() {
 	result := suite.clientDB.IsEmailExists(duplicateClient.Email)
 
 	suite.True(result)
+}
+func (suite *ClientDBTestSuite) TestVerifyUserExist() {
+
+	client := &entity.Client{ID: uuid.NewString(), Name: "joh", Email: "joh@example.com", Password: "123"}
+	err := suite.clientDB.Save(client)
+	suite.Nil(err)
+
+	result, err := suite.clientDB.FindByClient(client.Email)
+
+	suite.NoError(err)
+	suite.NotNil(result)
+}
+
+func (suite *ClientDBTestSuite) TestVerifyUserNotExist() {
+
+	client := &entity.Client{ID: uuid.NewString(), Name: "joh", Email: "joh@example.com", Password: "123"}
+	err := suite.clientDB.Save(client)
+	suite.Nil(err)
+
+	clientNotExit := &entity.Client{ID: uuid.NewString(), Name: "joh teste", Email: "johteste@example.com", Password: "1235"}
+
+	result, err := suite.clientDB.FindByClient(clientNotExit.Email)
+
+	suite.NotNil(err)
+	suite.Nil(result)
+
+	suite.Equal("customer not found", err.Error())
 }

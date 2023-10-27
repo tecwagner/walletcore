@@ -1,8 +1,11 @@
 package createClient
 
 import (
+	"fmt"
+
 	"github.com/tecwagner/walletcore-service/internal/entity"
 	clientGateway "github.com/tecwagner/walletcore-service/internal/gateway/client_gateway"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func NewCreateClientUseCase(clientGateway clientGateway.IClientGateway) *CreateClientUseCase {
@@ -18,7 +21,16 @@ func (uc *CreateClientUseCase) Execute(input CreateClientInputDTO) (*CreateClien
 		return nil, &JSONError{Message: "email is not unique"}
 	}
 
-	client, err := entity.NewClient(input.Name, input.Email, input.Password)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	fmt.Println(string(hashedPassword))
+
+	client, err := entity.NewClient(input.Name, input.Email, string(hashedPassword))	
+	
 
 	// Criar uma tratativa de error
 	if err != nil {

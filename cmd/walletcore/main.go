@@ -12,6 +12,7 @@ import (
 	accountDatabase "github.com/tecwagner/walletcore-service/internal/infrastructure/database/account-database"
 	clientDatabase "github.com/tecwagner/walletcore-service/internal/infrastructure/database/client-database"
 	transactionDatabase "github.com/tecwagner/walletcore-service/internal/infrastructure/database/transaction-database"
+	authenticationUser "github.com/tecwagner/walletcore-service/internal/useCase/authentication_user"
 	createAccount "github.com/tecwagner/walletcore-service/internal/useCase/create_account"
 	createClient "github.com/tecwagner/walletcore-service/internal/useCase/create_client"
 	createTransaction "github.com/tecwagner/walletcore-service/internal/useCase/create_transaction"
@@ -57,6 +58,7 @@ func main() {
 		return transactionDatabase.NewTransactionDB(db)
 	})
 
+	authenticationUseCase := authenticationUser.NewAuthenticationUseCase(clientDB)
 	createClientUseCase := createClient.NewCreateClientUseCase(clientDB)
 	createAccountUseCase := createAccount.NewCreateAccountUseCase(accountDB, clientDB)
 	createTransactionUseCase := createTransaction.NewCreateTransactionUseCase(uow, eventDispatcher, createTransactionEvent, balanceUpdatedEvent)
@@ -65,18 +67,20 @@ func main() {
 	webserver := webserver.NewWebServer(":8080")
 
 	// Mapeando as rotas
+	authenticationHandler := web.NewWebAuthenticationHandler(*authenticationUseCase)
 	clientHandler := web.NewWebClientHandler(*createClientUseCase)
 	accountHandler := web.NewWebAccountHandler(*createAccountUseCase)
 	transactionHandler := web.NewWebTransactionHandler(*createTransactionUseCase)
 
-	webserver.AddHandler("/clients", clientHandler.CreateClient)
-	webserver.AddHandler("/accounts", accountHandler.CreateAccount)
-	webserver.AddHandler("/transactions", transactionHandler.CreateTransaction)
+	webserver.AddHandlerPublic("/login", authenticationHandler.AuthUser, true)
+	webserver.AddHandlerPublic("/clients", clientHandler.CreateClient, false)
+	webserver.AddHandlerPublic("/accounts", accountHandler.CreateAccount, false)
+	webserver.AddHandlerPublic("/transactions", transactionHandler.CreateTransaction, false)
 
 	fmt.Println("Server is running", webserver.WebServerPort)
 
 	webserver.Start()
-	
+
 }
 
 func setupDatabase() *sql.DB {
@@ -90,4 +94,3 @@ func setupDatabase() *sql.DB {
 func setupEventDispatcher() *events.EventDispatcher {
 	return events.NewEventDispatcher()
 }
-

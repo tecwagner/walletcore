@@ -2,7 +2,6 @@ package web
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	createClient "github.com/tecwagner/walletcore-service/internal/useCase/create_client"
@@ -30,7 +29,6 @@ func (h *WebClientHandler) CreateClient(w http.ResponseWriter, r *http.Request) 
 
 	output, err := h.CreateClientUseCase.Execute(dto)
 	if err != nil {
-		fmt.Println("Erro Email")
 		if emailUniqueError, ok := err.(*createClient.JSONError); ok {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusConflict)

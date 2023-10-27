@@ -16,7 +16,6 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 	clientMock.On("Get", client.ID).Return(client, nil)
 
 	// Create a new account
-
 	accountMock := &mocks.AccountGatewayMock{}
 	accountMock.On("Save", mock.Anything).Return(nil)
 
