@@ -1,18 +1,26 @@
-version: '3'
+version: '3.9'
 
 services:
   goapp: 
+    container_name: goapp
     build: .
     platform: linux/amd64
     volumes:
       - .:/app
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: "${OTEL_EXPORTER_OTLP_ENDPOINT}"
+      JAEGER_TRACEPROVIDER: "${JAEGER_TRACEPROVIDER}"    
     ports:
-      - 8080:8080
+      - 8081:8081
+    depends_on:
+      - mysql
+      - otelcol
     extra_hosts:
       - "host.docker.internal:172.17.0.1" 
 
   mysql:
     image: mysql:5.7
+    container_name: mysql
     platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -41,9 +49,6 @@ services:
     depends_on:
       - zookeeper
     ports:
-    # Exposes 9092 for external connections to the broker
-    # Use kafka:29092 for connections internal on the docker network
-    # See https://rmoff.net/2018/08/02/kafka-listeners-explained/ for details
       - '9092:9092'
     environment:
       TZ: Sao_Paulo/Brazil
@@ -79,3 +84,114 @@ services:
     extra_hosts:
       - "host.docker.internal:172.17.0.1"  
   
+  # ********************
+  # Telemetry Components
+  # ********************
+  # Jaeger
+  jaeger:
+    image: jaegertracing/all-in-one
+    container_name: jaeger
+    command:
+      - "--log-level=debug"
+      - "--memory.max-traces"
+      - "10000"
+      - "--query.base-path"
+      - "/jaeger/ui"
+      - "--prometheus.server-url"
+      - "http://${PROMETHEUS_ADDR}"
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    restart: unless-stopped
+    ports:
+      - "${JAEGER_SERVICE_PORT}:${JAEGER_SERVICE_PORT}"                    # Jaeger UI
+      - "14250:14250"
+      - "14268:14268" # Jaeger collector
+      - "4317"                           # OTLP gRPC default port
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - METRICS_STORAGE_TYPE=prometheus
+    logging: 
+      driver: "json-file"
+      options:
+       max-size: "5m"
+       max-file: "2"
+    extra_hosts:
+     - "host.docker.internal:172.17.0.1"
+
+  # Grafana
+  grafana:
+    image: grafana/grafana:9.1.0
+    container_name: grafana
+    ports:
+      - "${GRAFANA_SERVICE_PORT}:${GRAFANA_SERVICE_PORT}"
+    depends_on:
+      - prometheus
+    logging: 
+      driver: "json-file"
+      options:
+       max-size: "5m"
+       max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+      
+  # OpenTelemetry Collector
+  otelcol:
+    image: otel/opentelemetry-collector-contrib:0.88.0
+    container_name: otel-col
+    deploy:
+      resources:
+        limits:
+          memory: 125M
+    restart: unless-stopped
+    command: [ "--config=/etc/otelcol-config.yml", "--config=/etc/otelcol-config-extras.yml" ]
+    volumes:
+      - ./pkg/otelcollector/otelcol-config.yml:/etc/otelcol-config.yml
+      - ./pkg/otelcollector/otelcol-config-extras.yml:/etc/otelcol-config-extras.yml
+    ports:
+      - "4317"          # OTLP over gRPC receiver
+      - "4318:4318"     # OTLP over HTTP receiver
+      - "9464"          # Prometheus exporter
+      - "8888"          # metrics endpoint
+    depends_on:
+      - jaeger
+    logging: 
+      driver: "json-file"
+      options:
+       max-size: "5m"
+       max-file: "2"
+    # extra_hosts:
+    #   - "host.docker.internal:172.17.0.1"
+
+  # Prometheus
+  prometheus:
+    image: quay.io/prometheus/prometheus:v2.34.0
+    container_name: prometheus
+    command:
+      - --web.console.templates=/etc/prometheus/consoles
+      - --web.console.libraries=/etc/prometheus/console_libraries
+      - --storage.tsdb.retention.time=1h
+      - --config.file=/etc/prometheus/prometheus-config.yaml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+      - --web.route-prefix=/
+      - --enable-feature=exemplar-storage
+    volumes:
+      - ./pkg/prometheus/prometheus-config.yaml:/etc/prometheus/prometheus-config.yaml
+    depends_on:
+      - otelcol
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    ports:
+      - "${PROMETHEUS_SERVICE_PORT}:${PROMETHEUS_SERVICE_PORT}"
+    logging: 
+      driver: "json-file"
+      options:
+       max-size: "5m"
+       max-file: "2"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+       

@@ -1,0 +1,33 @@
+global:
+  # Intervalo de avaliação global para regras de alerta (opcional)
+  evaluation_interval: 30s
+  # Intervalo de coleta padrão para todas as metas (opcional)
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: otel
+    # Nome da tarefa para coletar métricas OpenTelemetry
+    honor_labels: true
+    static_configs:
+      - targets:
+          - "otelcol:9464"
+
+  - job_name: otel-collector
+    # Coletar métricas do OpenTelemetry Collector
+    honor_labels: true
+    static_configs:
+      - targets:
+          - "otelcol:8888"
+
+  - job_name: "prometheus"
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+          - "172.27.6.247:9090"
+
+  - job_name: "walletcore"
+    honor_labels: true
+    scrape_interval: 10s
+    static_configs:
+      - targets:
+          - "172.27.6.247:8081"

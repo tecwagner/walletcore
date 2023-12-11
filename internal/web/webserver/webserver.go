@@ -3,8 +3,9 @@ package webserver
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/httplog"
+	telemetrymiddleware "github.com/go-chi/telemetry"
 	"github.com/tecwagner/walletcore-service/pkg/security"
 )
 
@@ -15,8 +16,18 @@ type WebServer struct {
 }
 
 func NewWebServer(webServerPort string) *WebServer {
+
+	//Logger
+	logger := httplog.NewLogger("walletcore", httplog.Options{
+		JSON: true,
+	})
+
 	r := chi.NewRouter()
-	r.Use(middleware.Logger)
+	r.Use(httplog.RequestLogger(logger))
+
+	r.Use(telemetrymiddleware.Collector(telemetrymiddleware.Config{
+		AllowAny: true,
+	}, []string{"/api/v1"}))
 
 	return &WebServer{
 		Router:        r,

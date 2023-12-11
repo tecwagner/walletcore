@@ -1,43 +1,51 @@
 
-POST http://localhost:8080/login HTTP/1.1
+
+# URL de Metricas coletada pelo opentelemetry
+
+GET http://localhost:8081/metrics
+
+####
+
+POST http://localhost:8081/api/v1/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email": "dont.doe@gmail.com",
-    "password": "1234"
+    "email": "wagner.oliveira@gmail.com",
+    "password": "12"
 }
 
 ####
 
-POST http://localhost:8080/clients HTTP/1.1
+
+POST http://localhost:8081/api/v1/clients HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRvbnQuZG9lQGdtYWlsLmNvbSIsImV4cCI6MTY5ODQzNDM4MywiaWQiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIiLCJzdWIiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIifQ.lrQ47AqzragBsVNWNJ99IDnRB7z5YWEvY5QDKGBmq00
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndhZ25lci5vbGl2ZWlyYUBnbWFpbC5jb20iLCJleHAiOjE3MDIzMDUxOTEsImlkIjoiNWQ3OTQ2MTItZGZhNi00MDBhLWJkYmUtOWEwNjM2YzM2NzE2Iiwic3ViIjoiNWQ3OTQ2MTItZGZhNi00MDBhLWJkYmUtOWEwNjM2YzM2NzE2In0.kLhwQl0gmYeZY0eh6ty3wHLNf7yHTHUL2PZrU6aJ
 
 {
-    "name": "Wagner Oliveira",
-    "email": "wagner.oliveira@gmail.com",
+    "name": "Camila Grabriela",
+    "email": "camila.gabriela@gmail.com",
     "password": "1234"
 
 }
 
 ###
 
-POST http://localhost:8080/accounts HTTP/1.1
+POST http://localhost:8081/api/v1/accounts HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRvbnQuZG9lQGdtYWlsLmNvbSIsImV4cCI6MTY5ODQzNDM4MywiaWQiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIiLCJzdWIiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIifQ.lrQ47AqzragBsVNWNJ99IDnRB7z5YWEvY5QDKGBmq00
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndhZ25lci5vbGl2ZWlyYUBnbWFpbC5jb20iLCJleHAiOjE2OTkzNzMwNjIsImlkIjoiNWQ3OTQ2MTItZGZhNi00MDBhLWJkYmUtOWEwNjM2YzM2NzE2Iiwic3ViIjoiNWQ3OTQ2MTItZGZhNi00MDBhLWJkYmUtOWEwNjM2YzM2NzE2In0.sgX7whLK7plTs-oZzfnbqDnmLPYnvgWUQkVjwreYSTA
 
 {
-    "client_id": "7965d1e5-e634-4a7c-94a1-f7a8e5980d33"
+    "client_id": "914bf44a-d3a0-4486-aa2c-febcaf7e76c8xcx"
 }
 
 ###
 
-POST http://localhost:8080/transactions HTTP/1.1
+POST http://localhost:8081/api/v1/transactions HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRvbnQuZG9lQGdtYWlsLmNvbSIsImV4cCI6MTY5ODQzNDM4MywiaWQiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIiLCJzdWIiOiIwZDZkNjY0MC03M2IwLTRlOWMtODU2OS1mNTQwODVhYzI1NGIifQ.lrQ47AqzragBsVNWNJ99IDnRB7z5YWEvY5QDKGBmq00
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndhZ25lci5vbGl2ZWlyYUBnbWFpbC5jb20iLCJleHAiOjE2OTkzNzMwNjIsImlkIjoiNWQ3OTQ2MTItZGZhNi00MDBhLWJkYmUtOWEwNjM2YzM2NzE2Iiwic3ViIjoiNWQ3OTQ2MTItZGZhNi00MDBhLWJkYmUtOWEwNjM2YzM2NzE2In0.sgX7whLK7plTs-oZzfnbqDnmLPYnvgWUQkVjwreYSTA
 
 {
-    "account_id_from": "77d35a02-1a8a-45d9-80ba-5603df12bab0",
-    "account_id_to": "34627fd4-65ad-40de-8972-6ef67ee945f4",
-    "amount": 200
+    "account_id_from": "6ceabb90-9667-4858-8f30-51b858158fea",
+    "account_id_to": "dc986f54-7756-41a4-9cee-e847c60b5d60",
+    "amount": 300
 }
