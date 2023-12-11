@@ -87,26 +87,6 @@ func respondWithError(w http.ResponseWriter, status int, message string, err err
     }
 }
 
-// ParseToken parses a token and handles token expiration
-// func ParseToken(tokenString string) (*jwt.Token, error) {
-
-// 	token, err := parseHS256(tokenString)
-// 	if err != nil && err.Error() == "Token is expired" {
-// 		token, err = parseHS256(tokenString)
-// 	}
-
-// 	return token, err
-// }
-
-// func parseHS256(tokenString string) (*jwt.Token, error) {
-// 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-// 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-// 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-// 		}
-// 		return []byte(secret), nil
-// 	})
-// }
-
 // GetClaims retrieves claims information
 func GetClaims(token *jwt.Token) (jwt.MapClaims, error) {
 	if !token.Valid {

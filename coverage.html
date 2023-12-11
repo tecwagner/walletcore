@@ -1,0 +1,945 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>entity: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/tecwagner/walletcore-service/internal/entity/account.go (100.0%)</option>
+				
+				<option value="file1">github.com/tecwagner/walletcore-service/internal/entity/client.go (87.5%)</option>
+				
+				<option value="file2">github.com/tecwagner/walletcore-service/internal/entity/transaction.go (82.4%)</option>
+				
+				<option value="file3">github.com/tecwagner/walletcore-service/internal/infrastructure/database/account-database/account_db.go (58.6%)</option>
+				
+				<option value="file4">github.com/tecwagner/walletcore-service/internal/infrastructure/database/client-database/client_db.go (80.0%)</option>
+				
+				<option value="file5">github.com/tecwagner/walletcore-service/internal/infrastructure/database/transaction-database/transaction_db.go (77.8%)</option>
+				
+				<option value="file6">github.com/tecwagner/walletcore-service/internal/useCase/authentication_user/authentication.go (83.3%)</option>
+				
+				<option value="file7">github.com/tecwagner/walletcore-service/internal/useCase/create_account/create_account.go (80.0%)</option>
+				
+				<option value="file8">github.com/tecwagner/walletcore-service/internal/useCase/create_client/create_client.go (76.9%)</option>
+				
+				<option value="file9">github.com/tecwagner/walletcore-service/internal/useCase/create_client/create_client_dto.go (100.0%)</option>
+				
+				<option value="file10">github.com/tecwagner/walletcore-service/internal/useCase/create_transaction/create_transaction.go (20.8%)</option>
+				
+				<option value="file11">github.com/tecwagner/walletcore-service/pkg/events/event-dispatcher.go (96.3%)</option>
+				
+				<option value="file12">github.com/tecwagner/walletcore-service/pkg/kafka/consumer.go (0.0%)</option>
+				
+				<option value="file13">github.com/tecwagner/walletcore-service/pkg/kafka/producer.go (75.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package entity
+
+import (
+        "time"
+
+        "github.com/google/uuid"
+)
+
+type Account struct {
+        ID             string `json:"id"`
+        Client         *Client
+        ClientID       string    `json:"client_id"`        
+        Balance        float64   `json:"balance"`
+        CreatedAt      time.Time `json:"created_at"`
+        UpdatedAt      time.Time `json:"updated_at"`
+}
+
+func NewAccount(client *Client) *Account <span class="cov8" title="1">{
+
+        if client == nil </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">account := &amp;Account{
+                ID:        uuid.New().String(),
+                Client:    client,
+                Balance:   0,
+                CreatedAt: time.Now(),
+                UpdatedAt: time.Now(),
+        }
+
+        return account</span>
+}
+
+func (a *Account) Credit(amount float64) <span class="cov8" title="1">{
+        a.Balance += amount
+        a.UpdatedAt = time.Now()
+}</span>
+
+func (a *Account) Debit(amount float64) <span class="cov8" title="1">{
+        a.Balance -= amount
+        a.UpdatedAt = time.Now()
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package entity
+
+import (
+        "errors"
+        "time"
+
+        "github.com/google/uuid"
+)
+
+type Client struct {
+        ID        string     `json:"id"`
+        Name      string     `json:"name"`
+        Email     string     `json:"email"`        
+        Password  string         `json:"password"`
+        Accounts  []*Account `json:"accounts"`
+        CreatedAt time.Time  `json:"created_at"`
+        UpdatedAt time.Time  `json:"updated_at"`
+}
+
+func NewClient(name, email, password string) (*Client, error) <span class="cov8" title="1">{
+        client := &amp;Client{
+                ID:        uuid.New().String(),
+                Name:      name,
+                Email:     email,
+                Password: password,
+                CreatedAt: time.Now(),
+                UpdatedAt: time.Now(),
+        }
+
+        err := client.IsValidated()
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return client, nil</span>
+}
+
+func (c *Client) IsValidated() error <span class="cov8" title="1">{
+        if c.Name == "" </span><span class="cov8" title="1">{
+                return errors.New("name is required")
+        }</span>
+
+        <span class="cov8" title="1">if c.Email == "" </span><span class="cov0" title="0">{
+                return errors.New("email is required")
+        }</span>
+
+        <span class="cov8" title="1">if c.Password == "" </span><span class="cov0" title="0">{
+                return errors.New("password is required")
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (c *Client) Update(name, email, password string) error <span class="cov8" title="1">{
+        c.Name = name
+        c.Email = email
+        c.Password  = password
+        c.UpdatedAt = time.Now()
+        err := c.IsValidated()
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (c *Client) AddAccount(account *Account) error <span class="cov8" title="1">{
+        if account.Client.ID != c.ID </span><span class="cov0" title="0">{
+                return errors.New("account does not belong to this client")
+        }</span>
+        <span class="cov8" title="1">c.Accounts = append(c.Accounts, account)
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package entity
+
+import (
+        "errors"
+        "time"
+
+        "github.com/google/uuid"
+)
+
+type Transaction struct {
+        ID            string `json:"id"`
+        AccountFrom   *Account
+        AccountFromID string `json:"account_from_id"`
+        AccountTo     *Account
+        AccountToID   string    `json:"account_to_id"`
+        Amount        float64   `json:"amount"`
+        CreatedAt     time.Time `json:"createdAt"`
+}
+
+func NewTransaction(accountFrom, accountTo *Account, amount float64) (*Transaction, error) <span class="cov8" title="1">{
+
+        transaction := &amp;Transaction{
+                ID:          uuid.New().String(),
+                AccountFrom: accountFrom,
+                AccountTo:   accountTo,
+                Amount:      amount,
+                CreatedAt:   time.Now(),
+        }
+
+        err := transaction.Validate()
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">transaction.Commit()
+        return transaction, nil</span>
+}
+
+func (t *Transaction) Commit() <span class="cov8" title="1">{
+        t.AccountFrom.Debit(t.Amount)
+        t.AccountTo.Credit(t.Amount)
+
+}</span>
+
+func (t *Transaction) Validate() error <span class="cov8" title="1">{
+        if t.Amount &lt;= 0 </span><span class="cov0" title="0">{
+                return errors.New("value must be greater than zero")
+        }</span>
+        <span class="cov8" title="1">if t.AccountFrom.Balance &lt; t.Amount </span><span class="cov8" title="1">{
+                return errors.New("insufficient balance")
+        }</span>
+        <span class="cov8" title="1">if t.AccountFrom.ID == t.AccountTo.ID </span><span class="cov0" title="0">{
+                return errors.New("cannot transfer to the same account")
+        }</span>
+        <span class="cov8" title="1">if t.AccountFrom == nil || t.AccountTo == nil </span><span class="cov0" title="0">{
+                return errors.New("source and destination accounts must be specified")
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package accountDatabase
+
+import (
+        "database/sql"
+
+        "github.com/tecwagner/walletcore-service/internal/entity"
+)
+
+type AccountDB struct {
+        DB *sql.DB
+}
+
+func NewAccountDB(db *sql.DB) *AccountDB <span class="cov8" title="1">{
+        return &amp;AccountDB{
+                DB: db,
+        }
+}</span>
+
+func (acc *AccountDB) FindByID(id string) (*entity.Account, error) <span class="cov8" title="1">{
+        var account entity.Account
+        var client entity.Client
+        account.Client = &amp;client
+
+        stmt, err := acc.DB.Prepare("SELECT acc.id, acc.client_id, acc.balance, acc.created_at, cli.id, cli.name, cli.email, cli.created_at FROM accounts acc INNER JOIN clients cli ON acc.client_id = cli.id WHERE acc.id = ?")
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer stmt.Close()
+        row := stmt.QueryRow(id)
+        err = row.Scan(
+                &amp;account.ID,
+                &amp;account.Client.ID,
+                &amp;account.Balance,
+                &amp;account.CreatedAt,
+                &amp;client.ID,
+                &amp;client.Name,
+                &amp;client.Email,
+                &amp;client.CreatedAt,
+        )
+
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return &amp;account, nil</span>
+}
+
+func (acc *AccountDB) Save(account *entity.Account) error <span class="cov8" title="1">{
+        stmt, err := acc.DB.Prepare("INSERT INTO accounts ( id, client_id,  balance, created_at) VALUES (?, ?, ?, ?)")
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">defer stmt.Close()
+
+        _, err = stmt.Exec(account.ID, account.Client.ID, account.Balance, account.CreatedAt)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (acc *AccountDB) UpdateBalance(account *entity.Account) error <span class="cov0" title="0">{
+        stmt, err := acc.DB.Prepare("UPDATE accounts SET balance = ? WHERE id = ?")
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">defer stmt.Close()
+
+        _, err = stmt.Exec(account.Balance, account.ID)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package clientDatabase
+
+import (
+        "database/sql"
+        "errors"
+
+        "github.com/tecwagner/walletcore-service/internal/entity"
+)
+
+type ClientDB struct {
+        DB *sql.DB
+}
+
+func NewClientDB(db *sql.DB) *ClientDB <span class="cov8" title="1">{
+        return &amp;ClientDB{
+                DB: db,
+        }
+}</span>
+
+func (cli *ClientDB) Get(id string) (*entity.Client, error) <span class="cov8" title="1">{
+        client := &amp;entity.Client{}
+        stmt, err := cli.DB.Prepare("SELECT id, name, email, created_at FROM clients WHERE id = ?")
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer stmt.Close()
+
+        row := stmt.QueryRow(id)
+        if err := row.Scan(&amp;client.ID, &amp;client.Name, &amp;client.Email, &amp;client.CreatedAt); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return client, nil</span>
+}
+
+func (cli *ClientDB) FindByClient(email string) (*entity.Client, error) <span class="cov8" title="1">{
+        client := &amp;entity.Client{}
+        stmt, err := cli.DB.Prepare("SELECT id, email, password FROM clients WHERE email = ? ",)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer stmt.Close()
+
+        var passwordHash string
+        row := stmt.QueryRow(email)
+        if err := row.Scan(&amp;client.ID, &amp;client.Email, &amp;passwordHash); err != nil </span><span class="cov8" title="1">{
+                if err == sql.ErrNoRows </span><span class="cov8" title="1">{
+                        return nil, errors.New("customer not found")
+                }</span>
+                <span class="cov0" title="0">return nil, err</span>
+        }
+        <span class="cov8" title="1">client.Password = passwordHash
+        return client, nil</span>
+}
+
+func (cli *ClientDB) Save(client *entity.Client) error <span class="cov8" title="1">{
+
+        stmt, err := cli.DB.Prepare("INSERT INTO clients ( id, name, email, password, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)")
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">defer stmt.Close()
+        _, err = stmt.Exec(client.ID, client.Name, client.Email, client.Password, client.CreatedAt, client.UpdatedAt)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (cli *ClientDB) IsEmailExists(email string) bool <span class="cov8" title="1">{
+        client := &amp;entity.Client{}
+        stmt, err := cli.DB.Prepare("SELECT id FROM clients WHERE email = ?")
+        if err != nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">defer stmt.Close()
+
+        row := stmt.QueryRow(email)
+        if err := row.Scan(&amp;client.ID); err != nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+
+        <span class="cov8" title="1">return true</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package transactionDatabase
+
+import (
+        "database/sql"
+
+        "github.com/tecwagner/walletcore-service/internal/entity"
+)
+
+type TransactionDB struct {
+        DB *sql.DB
+}
+
+func NewTransactionDB(db *sql.DB) *TransactionDB <span class="cov8" title="1">{
+        return &amp;TransactionDB{
+                DB: db,
+        }
+}</span>
+
+func (t *TransactionDB) Create(transaction *entity.Transaction) error <span class="cov8" title="1">{
+        stmt, err := t.DB.Prepare("INSERT INTO transactions (id, account_id_from, account_id_to, amount, created_at) VALUES (?, ?, ?, ?, ?)")
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">defer stmt.Close()
+        _, err = stmt.Exec(transaction.ID, transaction.AccountFrom.ID, transaction.AccountTo.ID, transaction.Amount, transaction.CreatedAt)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package authenticationUser
+
+import (
+        "errors"
+
+        clientGateway "github.com/tecwagner/walletcore-service/internal/gateway/client_gateway"
+        "github.com/tecwagner/walletcore-service/pkg/security"
+        "golang.org/x/crypto/bcrypt"
+)
+
+func NewAuthenticationUseCase(authGateway clientGateway.IClientGateway) *AuthenticationUseCase <span class="cov8" title="1">{
+        return &amp;AuthenticationUseCase{
+                AuthGateway: authGateway,
+        }
+}</span>
+
+func (uc *AuthenticationUseCase) Execute(input AuthenticationInputDTO) (*AuthenticationOutputDTO, error) <span class="cov8" title="1">{
+
+        if input.Email == "" || input.Password == "" </span><span class="cov8" title="1">{
+                return nil, errors.New("email or password must be provided")
+        }</span>
+        
+        <span class="cov8" title="1">user, err := uc.AuthGateway.FindByClient(input.Email)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">err= bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password))
+        
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, errors.New("invalid password")
+        }</span>
+        
+        <span class="cov8" title="1">token, err := security.NewJWTToken(user)
+
+        output := &amp;AuthenticationOutputDTO{
+                Token: token,
+        }
+
+        return output, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package createAccount
+
+import (
+        "time"
+
+        "github.com/tecwagner/walletcore-service/internal/entity"
+        accountGateway "github.com/tecwagner/walletcore-service/internal/gateway/account_gateway"
+        clientGateway "github.com/tecwagner/walletcore-service/internal/gateway/client_gateway"
+)
+
+func NewCreateAccountUseCase(account accountGateway.IAccountGateway, client clientGateway.IClientGateway) *CreateAccountUseCase <span class="cov8" title="1">{
+        return &amp;CreateAccountUseCase{
+                AccountGateway: account,
+                ClientGateway:  client,
+        }
+}</span>
+
+func (uc *CreateAccountUseCase) Execute(input CreateAccountInputDTO) (*CreateAccountOutputDTO, error) <span class="cov8" title="1">{
+        // Consulta client
+        client, err := uc.ClientGateway.Get(input.ClientID)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Cria uma conta passando o client por parametro
+        <span class="cov8" title="1">account := entity.NewAccount(client)
+
+        // Salva a conta
+        err = uc.AccountGateway.Save(account)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">output := &amp;CreateAccountOutputDTO{
+                ID:        account.ID,
+                ClientID:  input.ClientID,
+                Balance:   account.Balance,
+                CreatedAt: time.Now(),
+        }
+        return output, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package createClient
+
+import (
+        "github.com/tecwagner/walletcore-service/internal/entity"
+        clientGateway "github.com/tecwagner/walletcore-service/internal/gateway/client_gateway"
+        "golang.org/x/crypto/bcrypt"
+)
+
+func NewCreateClientUseCase(clientGateway clientGateway.IClientGateway) *CreateClientUseCase <span class="cov8" title="1">{
+        return &amp;CreateClientUseCase{
+                ClientGateway: clientGateway,
+        }
+}</span>
+
+func (uc *CreateClientUseCase) Execute(input CreateClientInputDTO) (*CreateClientOutputDTO, error) <span class="cov8" title="1">{
+
+        if uc.ClientGateway.IsEmailExists(input.Email) </span><span class="cov8" title="1">{
+
+                return nil, &amp;JSONError{Message: "email is not unique"}
+        }</span>
+
+        <span class="cov8" title="1">hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">client, err := entity.NewClient(input.Name, input.Email, string(hashedPassword))        
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">err = uc.ClientGateway.Save(client)        
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return &amp;CreateClientOutputDTO{
+                ID:        client.ID,
+                Name:      client.Name,
+                Email:     client.Email,
+                CreatedAt: client.CreatedAt,
+                UpdatedAt: client.UpdatedAt,
+        }, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package createClient
+
+import "time"
+
+type CreateClientInputDTO struct {
+        Name     string `json:"name"`
+        Email    string `json:"email"`
+        Password string `json:"password"`
+}
+
+type CreateClientOutputDTO struct {
+        ID        string    `json:"id"`
+        Name      string    `json:"name"`
+        Email     string    `json:"email"`
+        CreatedAt time.Time `json:"created_at"`
+        UpdatedAt time.Time `json:"updated_at"`
+}
+
+type JSONError struct {
+        Message string `json:"message"`
+}
+
+func (e JSONError) Error() string <span class="cov8" title="1">{
+        return e.Message
+}</span>
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package createTransaction
+
+import (
+        "context"
+
+        "github.com/tecwagner/walletcore-service/internal/entity"
+        accountGateway "github.com/tecwagner/walletcore-service/internal/gateway/account_gateway"
+        transactionGateway "github.com/tecwagner/walletcore-service/internal/gateway/transaction_gateway"
+        "github.com/tecwagner/walletcore-service/pkg/events"
+        "github.com/tecwagner/walletcore-service/pkg/uow"
+)
+
+func NewCreateTransactionUseCase(
+        Uow uow.IUowInterface,
+        eventDispatcher events.IEventDispatcherInterface,
+        transactionCreated events.IEventInterface,
+        balanceUpdated events.IEventInterface,
+) *CreateTransactionUseCase <span class="cov8" title="1">{
+        return &amp;CreateTransactionUseCase{
+                Uow:                Uow,
+                EventDispatcher:    eventDispatcher,
+                TransactionCreated: transactionCreated,
+                BalanceUpdated:     balanceUpdated,
+        }
+}</span>
+
+func (uc *CreateTransactionUseCase) Execute(ctx context.Context, input CreateTransactionInputDTO) (*CreateTransactionOutputDTO, error) <span class="cov8" title="1">{
+        output := &amp;CreateTransactionOutputDTO{}
+        balanceUpdatedOutput := &amp;BalanceUpdatedOutputDTO{}
+
+        // Aplicando o metodo Unit Of Work
+        // O Do Executa toda a operação ao mesmo tempo
+        err := uc.Uow.Do(ctx, func(_ *uow.Uow) error </span><span class="cov0" title="0">{
+
+                accountRepository := uc.getAccountGateway(ctx)
+                transactionRepository := uc.getTransactionGateway(ctx)
+
+                // Consultando a conta do cliente pagador
+                accountFrom, err := accountRepository.FindByID(input.AccountFromID)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                // Consultador a conta do cliente recebedor
+                <span class="cov0" title="0">accountTo, err := accountRepository.FindByID(input.AccountToID)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                // Iniciando a nova transação
+                <span class="cov0" title="0">transaction, err := entity.NewTransaction(accountFrom, accountTo, input.Amount)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                // Metodo que realiza alteração no saldo da conta
+                <span class="cov0" title="0">err = accountRepository.UpdateBalance(accountFrom)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+                <span class="cov0" title="0">err = accountRepository.UpdateBalance(accountTo)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                // Criando a transação envia os dados para Banco de Dados
+                <span class="cov0" title="0">err = transactionRepository.Create(transaction)
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                <span class="cov0" title="0">output.ID = transaction.ID
+                output.AccountFromID = input.AccountFromID
+                output.AccountToID = input.AccountToID
+                output.Amount = input.Amount
+
+                balanceUpdatedOutput.AccountFromID = input.AccountFromID
+                balanceUpdatedOutput.AccountToID = input.AccountToID
+                balanceUpdatedOutput.BalanceAccountIDFrom = accountFrom.Balance
+                balanceUpdatedOutput.BalanceAccountIDTo = accountTo.Balance
+
+                return nil</span>
+
+        })
+
+        <span class="cov8" title="1">if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        // Registrando e Enviado evento kafka Transaction
+        <span class="cov8" title="1">uc.TransactionCreated.SetPayload(output)
+        uc.EventDispatcher.Dispatch(uc.TransactionCreated)
+
+        // Registrando e Enviado evento kafka Balance
+        uc.BalanceUpdated.SetPayload(balanceUpdatedOutput)
+        uc.EventDispatcher.Dispatch(uc.BalanceUpdated)
+
+        return output, nil</span>
+}
+
+func (uc *CreateTransactionUseCase) getAccountGateway(ctx context.Context) accountGateway.IAccountGateway <span class="cov0" title="0">{
+        repo, err := uc.Uow.GetRepository(ctx, "AccountDB")
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+        <span class="cov0" title="0">return repo.(accountGateway.IAccountGateway)</span>
+}
+
+func (uc *CreateTransactionUseCase) getTransactionGateway(ctx context.Context) transactionGateway.ITransactionGateway <span class="cov0" title="0">{
+        repo, err := uc.Uow.GetRepository(ctx, "TransactionDB")
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+        <span class="cov0" title="0">return repo.(transactionGateway.ITransactionGateway)</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package events
+
+import (
+        "errors"
+        "sync"
+)
+
+// Criar midleawer de erros
+var ErrHandlerAlreadyRegistered = errors.New("handler already registered")
+
+type EventDispatcher struct {
+        // O Handler pode executar varios eventos
+        handlers map[string][]IEventHandlerInterface
+}
+
+// Para implementar o metodo NewEventDispatcher() é preciso implementar os handlers
+func NewEventDispatcher() *EventDispatcher <span class="cov8" title="1">{
+        return &amp;EventDispatcher{
+                handlers: make(map[string][]IEventHandlerInterface),
+        }
+}</span>
+
+// Percorre a lista de eventos registrado e executa um por um pelo nome
+func (evd *EventDispatcher) Dispatch(event IEventInterface) error <span class="cov8" title="1">{
+
+        if handlers, ok := evd.handlers[event.GetName()]; ok </span><span class="cov8" title="1">{
+                wg := &amp;sync.WaitGroup{}
+                for _, handler := range handlers </span><span class="cov8" title="1">{
+                        wg.Add(1)
+                        go handler.Handle(event, wg)
+                }</span>
+                <span class="cov8" title="1">wg.Wait()</span>
+        }
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+// Registra os eventos por nome
+func (evd *EventDispatcher) Register(eventName string, handler IEventHandlerInterface) error <span class="cov8" title="1">{
+
+        if _, ok := evd.handlers[eventName]; ok </span><span class="cov8" title="1">{
+                for _, h := range evd.handlers[eventName] </span><span class="cov8" title="1">{
+                        if h == handler </span><span class="cov8" title="1">{
+                                return ErrHandlerAlreadyRegistered
+                        }</span>
+                }
+        }
+        <span class="cov8" title="1">evd.handlers[eventName] = append(evd.handlers[eventName], handler)
+        return nil</span>
+}
+
+// Remove eventos por nome
+func (evd *EventDispatcher) Remove(eventName string, handler IEventHandlerInterface) error <span class="cov8" title="1">{
+        if _, ok := evd.handlers[eventName]; ok </span><span class="cov8" title="1">{
+                for i, h := range evd.handlers[eventName] </span><span class="cov8" title="1">{
+                        if h == handler </span><span class="cov8" title="1">{
+                                evd.handlers[eventName] = append(evd.handlers[eventName][:i], evd.handlers[eventName][i+1:]...)
+                                return nil
+                        }</span>
+                }
+        }
+        <span class="cov0" title="0">return nil</span>
+}
+
+// Limpa todos os eventos existente no handler
+func (evd *EventDispatcher) Clear() error <span class="cov8" title="1">{
+
+        // Refaz o map de handler
+        evd.handlers = make(map[string][]IEventHandlerInterface)
+
+        return nil
+}</span>
+
+// Verifica todos os eventos que foram executados
+func (evd *EventDispatcher) Has(eventName string, handler IEventHandlerInterface) bool <span class="cov8" title="1">{
+
+        // O evento existe
+        if _, ok := evd.handlers[eventName]; ok </span><span class="cov8" title="1">{
+                // Percore todos os registros
+                for _, h := range evd.handlers[eventName] </span><span class="cov8" title="1">{
+                        if h == handler </span><span class="cov8" title="1">{
+                                return true
+                        }</span>
+                }
+        }
+        <span class="cov8" title="1">return false</span>
+}
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package kafka
+
+import ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
+
+type Consumer struct {
+        ConfigMap *ckafka.ConfigMap
+        Topics    []string
+}
+
+func NewConsumer(configMap *ckafka.ConfigMap, topics []string) *Consumer <span class="cov0" title="0">{
+        return &amp;Consumer{
+                ConfigMap: configMap,
+                Topics:    topics,
+        }
+}</span>
+
+func (c *Consumer) Consumer(msgChan chan *ckafka.Message) error <span class="cov0" title="0">{
+        consumer, err := ckafka.NewConsumer(c.ConfigMap)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+        <span class="cov0" title="0">err = consumer.SubscribeTopics(c.Topics, nil)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+        <span class="cov0" title="0">for </span><span class="cov0" title="0">{
+                msg, err := consumer.ReadMessage(-1)
+                if err == nil </span><span class="cov0" title="0">{
+                        msgChan &lt;- msg
+                }</span>
+        }
+
+}
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package kafka
+
+import (
+        "encoding/json"
+
+        ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
+)
+
+type Producer struct {
+        ConfigMap *ckafka.ConfigMap
+}
+
+func NewProducer(configMap *ckafka.ConfigMap) *Producer <span class="cov8" title="1">{
+        return &amp;Producer{
+                ConfigMap: configMap,
+        }
+}</span>
+
+func (p *Producer) Publish(msg interface{}, key []byte, topic string) error <span class="cov8" title="1">{
+        producer, err := ckafka.NewProducer(p.ConfigMap)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">msgJson, err := json.Marshal(msg)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">message := &amp;ckafka.Message{
+                TopicPartition: ckafka.TopicPartition{Topic: &amp;topic, Partition: ckafka.PartitionAny},
+                Value:          msgJson,
+                Key:            key,
+        }
+
+        err = producer.Produce(message, nil)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

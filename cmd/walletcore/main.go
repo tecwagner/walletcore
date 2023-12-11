@@ -24,6 +24,7 @@ import (
 )
 
 func main() {
+
 	//Criar config para para variavel de ambiente
 	db := setupDatabase()
 	defer db.Close()
@@ -64,7 +65,7 @@ func main() {
 	createTransactionUseCase := createTransaction.NewCreateTransactionUseCase(uow, eventDispatcher, createTransactionEvent, balanceUpdatedEvent)
 
 	// Porta da aplicação
-	webserver := webserver.NewWebServer(":8080")
+	webserver := webserver.NewWebServer(":8081")
 
 	// Mapeando as rotas
 	authenticationHandler := web.NewWebAuthenticationHandler(*authenticationUseCase)
@@ -72,10 +73,10 @@ func main() {
 	accountHandler := web.NewWebAccountHandler(*createAccountUseCase)
 	transactionHandler := web.NewWebTransactionHandler(*createTransactionUseCase)
 
-	webserver.AddHandlerPublic("/login", authenticationHandler.AuthUser, true)
-	webserver.AddHandlerPublic("/clients", clientHandler.CreateClient, false)
-	webserver.AddHandlerPublic("/accounts", accountHandler.CreateAccount, false)
-	webserver.AddHandlerPublic("/transactions", transactionHandler.CreateTransaction, false)
+	webserver.AddHandlerPublic("/api/v1/login", authenticationHandler.AuthUser, true)
+	webserver.AddHandlerPublic("/api/v1/clients", clientHandler.CreateClient, true)
+	webserver.AddHandlerPublic("/api/v1/accounts", accountHandler.CreateAccount, false)
+	webserver.AddHandlerPublic("/api/v1/transactions", transactionHandler.CreateTransaction, false)
 
 	fmt.Println("Server is running", webserver.WebServerPort)
 
@@ -84,6 +85,7 @@ func main() {
 }
 
 func setupDatabase() *sql.DB {
+
 	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", "root", "root", "mysql", "3306", "wallet"))
 	if err != nil {
 		panic(err)
