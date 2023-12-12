@@ -63,6 +63,6 @@
         - siege --header="Content-Type: application/json" -c 100 -r 100 -d 30s "http://localhost:8081/api/v1/login POST {\"email\": \"wagner.oliveira@gmail.com\", \"password\": \"1234\"}"
 
     - strees test error
-        - siege --header="Content-Type: application/json" -c 100 -r 100 -d 30s "http://localhost:8081/api/v1/login POST {\"email\": \"wagner.oliveira@gmail.com\", \"password\": \"12\"}"
+        - siege --header="Content-Type: application/json" -c 10 -r 10 -d 30s "http://localhost:8081/api/v1/login POST {\"email\": \"wagner.oliveira@gmail.com\", \"password\": \"12\"}"
 
     - siege -c 10 -r 1000 "http://localhost:8081/api/v1/login
