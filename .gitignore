@@ -1,4 +1,4 @@
 .docker
-vendor
+/vendor
 coverage.html
 coverage.out

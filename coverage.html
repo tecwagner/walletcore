@@ -57,9 +57,9 @@
 				
 				<option value="file0">github.com/tecwagner/walletcore-service/internal/entity/account.go (100.0%)</option>
 				
-				<option value="file1">github.com/tecwagner/walletcore-service/internal/entity/client.go (87.5%)</option>
+				<option value="file1">github.com/tecwagner/walletcore-service/internal/entity/client.go (100.0%)</option>
 				
-				<option value="file2">github.com/tecwagner/walletcore-service/internal/entity/transaction.go (82.4%)</option>
+				<option value="file2">github.com/tecwagner/walletcore-service/internal/entity/transaction.go (88.2%)</option>
 				
 				<option value="file3">github.com/tecwagner/walletcore-service/internal/infrastructure/database/account-database/account_db.go (58.6%)</option>
 				
@@ -182,11 +182,11 @@ func (c *Client) IsValidated() error <span class="cov8" title="1">{
                 return errors.New("name is required")
         }</span>
 
-        <span class="cov8" title="1">if c.Email == "" </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if c.Email == "" </span><span class="cov8" title="1">{
                 return errors.New("email is required")
         }</span>
 
-        <span class="cov8" title="1">if c.Password == "" </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if c.Password == "" </span><span class="cov8" title="1">{
                 return errors.New("password is required")
         }</span>
 
@@ -206,7 +206,7 @@ func (c *Client) Update(name, email, password string) error <span class="cov8" t
 }
 
 func (c *Client) AddAccount(account *Account) error <span class="cov8" title="1">{
-        if account.Client.ID != c.ID </span><span class="cov0" title="0">{
+        if account.Client.ID != c.ID </span><span class="cov8" title="1">{
                 return errors.New("account does not belong to this client")
         }</span>
         <span class="cov8" title="1">c.Accounts = append(c.Accounts, account)
@@ -259,7 +259,7 @@ func (t *Transaction) Commit() <span class="cov8" title="1">{
 }</span>
 
 func (t *Transaction) Validate() error <span class="cov8" title="1">{
-        if t.Amount &lt;= 0 </span><span class="cov0" title="0">{
+        if t.Amount &lt;= 0 </span><span class="cov8" title="1">{
                 return errors.New("value must be greater than zero")
         }</span>
         <span class="cov8" title="1">if t.AccountFrom.Balance &lt; t.Amount </span><span class="cov8" title="1">{

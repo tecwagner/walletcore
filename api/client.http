@@ -42,10 +42,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndhZ25lc
 
 POST http://localhost:8081/api/v1/transactions HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndhZ25lci5vbGl2ZWlyYUBnbWFpbC5jb20iLCJleHAiOjE3MDIzOTM0MzMsImlkIjoiNWQ3OTQ2MTItZGZhNi00MDBhLWJkYmUtOWEwNjM2YzM2NzE2Iiwic3ViIjoiNWQ3OTQ2MTItZGZhNi00MDBhLWJkYmUtOWEwNjM2YzM2NzE2In0.1JT05b5RWqcAgOZWd6nMINU3AKFMZZ8GVmtDvHis9Ro
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndhZ25lci5vbGl2ZWlyYUBnbWFpbC5jb20iLCJleHAiOjE3MDQ4MTA5NjgsImlkIjoiNWQ3OTQ2MTItZGZhNi00MDBhLWJkYmUtOWEwNjM2YzM2NzE2Iiwic3ViIjoiNWQ3OTQ2MTItZGZhNi00MDBhLWJkYmUtOWEwNjM2YzM2NzE2In0.fQtlcn6Tmj7UqTNJ75OquLoJ-rXUUfhoxVmy5bKsMJc
 
 {
     "account_id_from": "dc986f54-7756-41a4-9cee-e847c60b5d60",
     "account_id_to": "6ceabb90-9667-4858-8f30-51b858158fea",
-    "amount": 10
+    "amount": 5
 }

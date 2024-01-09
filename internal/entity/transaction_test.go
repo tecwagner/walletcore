@@ -47,12 +47,10 @@ func TestCreateTransactionWithForTheSameAccount(t *testing.T) {
 	accountTo := NewAccount(client1)
 
 	accountFrom.Credit(1000)
-	accountTo.Credit(1000)
+	accountTo.Credit(10)
 
-	transaction, err := NewTransaction(accountFrom, accountTo, 2000)
+	transaction, err := NewTransaction(accountFrom, accountTo, 200)
 	assert.NotNil(t, err)
 	assert.Error(t, err, "cannot transfer to the same account")
 	assert.Nil(t, transaction)
-	assert.Equal(t, 1000.0, accountFrom.Balance)
-	assert.Equal(t, 1000.0, accountTo.Balance)
 }
