@@ -62,7 +62,11 @@
     - strees test sucesso
         - siege --header="Content-Type: application/json" -c 100 -r 100 -d 30s "http://localhost:8081/api/v1/login POST {\"email\": \"wagner.oliveira@gmail.com\", \"password\": \"1234\"}"
 
+        - siege --header="Content-Type: application/json" -c 100 -r 100 -d 30s "http://localhost:8081/api/v1/transactions POST {\"account_id_from\": \"dc986f54-7756-41a4-9cee-e847c60b5d60\", \"account_id_to\": \"6ceabb90-9667-4858-8f30-51b858158fea\", \"amount\": \2\}"
+
     - strees test error
         - siege --header="Content-Type: application/json" -c 10 -r 10 -d 30s "http://localhost:8081/api/v1/login POST {\"email\": \"wagner.oliveira@gmail.com\", \"password\": \"12\"}"
 
-    - siege -c 10 -r 1000 "http://localhost:8081/api/v1/login
+        - siege --header="Content-Type: application/json" -c 100 -r 100 -d 30s "http://localhost:8081/api/v1/transactions POST {\"account_id_from\": \"dc986f54-7756-41a4-9cee-e847c60b5d\", \"account_id_to\": \"6ceabb90-9667-4858-8f30-51b858158f\", \"amount\": \0\}"
+
+    - siege -c 10 -r 1000 "http://localhost:8081/api/v1/transactions"
