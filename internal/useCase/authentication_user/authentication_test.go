@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/tecwagner/walletcore-service/internal/entity"
+	"github.com/tecwagner/walletcore-service/internal/telemetry"
 	"github.com/tecwagner/walletcore-service/internal/useCase/mocks"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -16,7 +17,7 @@ func TestAuthUserUserCase_Execute(t *testing.T) {
 	m := &mocks.ClientGatewayMock{}
 	m.On("FindByClient", user.Email).Return(user, nil)
 
-	uc := NewAuthenticationUseCase(m)
+	uc := NewAuthenticationUseCase(m, &telemetry.Jaeger{})
 	inputDTO := AuthenticationInputDTO{Email: user.Email, Password: "123"}
 
 	fmt.Println("Auth:", inputDTO)
@@ -30,7 +31,7 @@ func TestAuthUserUserCase_Execute(t *testing.T) {
 
 func TestAuthUserUserCaseFaile_Execute(t *testing.T) {
 	m := &mocks.ClientGatewayMock{}
-	uc := NewAuthenticationUseCase(m)
+	uc := NewAuthenticationUseCase(m, &telemetry.Jaeger{})
 
 	inputEmailEmptyDTO := AuthenticationInputDTO{Email: "", Password: "123"}
 

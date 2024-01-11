@@ -6,12 +6,14 @@ import (
 	"fmt"
 
 	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/go-chi/httplog"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/tecwagner/walletcore-service/internal/event"
 	"github.com/tecwagner/walletcore-service/internal/event/handler"
 	accountDatabase "github.com/tecwagner/walletcore-service/internal/infrastructure/database/account-database"
 	clientDatabase "github.com/tecwagner/walletcore-service/internal/infrastructure/database/client-database"
 	transactionDatabase "github.com/tecwagner/walletcore-service/internal/infrastructure/database/transaction-database"
+	"github.com/tecwagner/walletcore-service/internal/telemetry"
 	authenticationUser "github.com/tecwagner/walletcore-service/internal/useCase/authentication_user"
 	createAccount "github.com/tecwagner/walletcore-service/internal/useCase/create_account"
 	createClient "github.com/tecwagner/walletcore-service/internal/useCase/create_client"
@@ -24,6 +26,10 @@ import (
 )
 
 func main() {
+
+	logger := httplog.NewLogger("walletcore", httplog.Options{
+		JSON: true,
+	})
 
 	//Criar config para para variavel de ambiente
 	db := setupDatabase()
@@ -45,9 +51,6 @@ func main() {
 	eventDispatcher.Register("TransactionCreated", handler.NewTransactionCreatedKafkaHandler(kafkaProducer))
 	eventDispatcher.Register("BalanceUpdated", handler.NewUpdatedBalanceKafkaHandler(kafkaProducer))
 
-	clientDB := clientDatabase.NewClientDB(db)
-	accountDB := accountDatabase.NewAccountDB(db)
-
 	ctx := context.Background()
 	uow := uow.NewUow(ctx, db)
 
@@ -59,7 +62,16 @@ func main() {
 		return transactionDatabase.NewTransactionDB(db)
 	})
 
-	authenticationUseCase := authenticationUser.NewAuthenticationUseCase(clientDB)
+	otel, err := telemetry.NewJaeger(ctx, "walletcore")
+	if err != nil {
+		logger.Panic().Msg(err.Error())
+	}
+	defer otel.Shutdown(ctx)
+
+	clientDB := clientDatabase.NewClientDB(db, otel)
+	accountDB := accountDatabase.NewAccountDB(db)
+
+	authenticationUseCase := authenticationUser.NewAuthenticationUseCase(clientDB, otel)
 	createClientUseCase := createClient.NewCreateClientUseCase(clientDB)
 	createAccountUseCase := createAccount.NewCreateAccountUseCase(accountDB, clientDB)
 	createTransactionUseCase := createTransaction.NewCreateTransactionUseCase(uow, eventDispatcher, createTransactionEvent, balanceUpdatedEvent)
@@ -68,7 +80,7 @@ func main() {
 	webserver := webserver.NewWebServer(":8081")
 
 	// Mapeando as rotas
-	authenticationHandler := web.NewWebAuthenticationHandler(*authenticationUseCase)
+	authenticationHandler := web.NewWebAuthenticationHandler(*authenticationUseCase, otel)
 	clientHandler := web.NewWebClientHandler(*createClientUseCase)
 	accountHandler := web.NewWebAccountHandler(*createAccountUseCase)
 	transactionHandler := web.NewWebTransactionHandler(*createTransactionUseCase)
