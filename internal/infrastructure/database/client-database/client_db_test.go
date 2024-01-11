@@ -8,6 +8,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/suite"
 	"github.com/tecwagner/walletcore-service/internal/entity"
+	"github.com/tecwagner/walletcore-service/internal/telemetry"
 )
 
 type ClientDBTestSuite struct {
@@ -21,7 +22,7 @@ func (setup *ClientDBTestSuite) SetupSuite() {
 	setup.Nil(err)
 	setup.db = db
 	db.Exec("CREATE TABLE clients (id varchar(255) PRIMARY KEY, name varchar(255), email varchar(255), password varchar(150), created_at date, updated_at date)")
-	setup.clientDB = NewClientDB(db)
+	setup.clientDB = NewClientDB(db, &telemetry.OTel{})
 }
 
 func (setup *ClientDBTestSuite) TearDownSuite() {
